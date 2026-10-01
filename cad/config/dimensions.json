@@ -1,0 +1,685 @@
+{
+  "_readme": "MASTER CONFIG. Single source of truth for MINUTEMAN. Edit here, then run `make all`. Units: inches, degrees, pounds, USD. Tags: FIXED | PARAMETRIC | PRELIMINARY | VERIFY ON TRUCK. Coordinate system: origin on the bed-floor top surface, truck centerline, at the inner face of the bed front wall (bulkhead). +X forward toward the cab, +Y left (driver side), +Z up.",
+  "version": "0.1",
+  "build": {
+    "FRAME_SYSTEM": {
+      "value": "HYBRID",
+      "options": [
+        "HYBRID",
+        "BOLTED_TUBE",
+        "TSLOT"
+      ],
+      "tag": "PARAMETRIC",
+      "note": "ADR 0001. Selects the v0.2+ frame architecture; v0.1 envelope is identical for all three."
+    },
+    "TRUCK": {
+      "value": "SHORT",
+      "options": [
+        "SHORT",
+        "LONG"
+      ],
+      "tag": "PARAMETRIC",
+      "note": "Truck reference variant shown in the model."
+    },
+    "WINDOW_NOSE_ENABLED": {
+      "value": true,
+      "tag": "PARAMETRIC",
+      "note": "Optional forward-facing nose window."
+    }
+  },
+  "camper": {
+    "camper_lower_length": {
+      "value": 78.0,
+      "tag": "PARAMETRIC",
+      "group": "Envelope",
+      "label": "Lower tub / main body length",
+      "note": "Must fit the shortest supported bed (6.75 ft)."
+    },
+    "camper_body_width": {
+      "value": 80.0,
+      "tag": "PARAMETRIC",
+      "group": "Envelope",
+      "label": "Main body width (above bed rails)",
+      "note": "Legal width limit is 102 in; 80 matches cab width for low drag."
+    },
+    "camper_lower_tub_width": {
+      "value": 63.0,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Envelope",
+      "label": "Lower tub width (upper step, between rails)",
+      "note": "Must pass through the tailgate opening and fit between bed sides with clearance."
+    },
+    "tub_side_clearance": {
+      "value": 0.75,
+      "tag": "PRELIMINARY",
+      "group": "Clearance",
+      "label": "Tub-to-bed side clearance, each side"
+    },
+    "wheel_well_clearance": {
+      "value": 1.0,
+      "tag": "PRELIMINARY",
+      "group": "Clearance",
+      "label": "Tub step clearance above wheel wells"
+    },
+    "body_rail_clearance": {
+      "value": 1.0,
+      "tag": "PRELIMINARY",
+      "group": "Clearance",
+      "label": "Body underside above bed rail top",
+      "note": "Space for rail caps / rubber spacers."
+    },
+    "camper_front_gap": {
+      "value": 0.5,
+      "tag": "PRELIMINARY",
+      "group": "Clearance",
+      "label": "Camper front wall to bed front wall gap"
+    },
+    "camper_to_cab_clearance": {
+      "value": 4.0,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Clearance",
+      "label": "Nose underside above cab roof",
+      "note": "Measure over clearance lights / antenna; allow for suspension and cab-bed relative motion.",
+      "fig": "M4"
+    },
+    "interior_height": {
+      "value": 80.0,
+      "tag": "FIXED",
+      "group": "Envelope",
+      "label": "Interior clear standing height",
+      "note": "Owner requirement: 6'7\" (79 in) person standing. Parametric for sensitivity (ADR 0002)."
+    },
+    "floor_sandwich": {
+      "value": 3.0,
+      "tag": "PRELIMINARY",
+      "group": "Construction",
+      "label": "Floor sandwich thickness"
+    },
+    "wall_thickness": {
+      "value": 1.75,
+      "tag": "PRELIMINARY",
+      "group": "Construction",
+      "label": "Wall thickness (skin + frame/insulation + interior panel)"
+    },
+    "roof_thickness": {
+      "value": 3.5,
+      "tag": "PRELIMINARY",
+      "group": "Construction",
+      "label": "Roof structure + skin thickness at eave"
+    },
+    "roof_crown": {
+      "value": 0.75,
+      "tag": "PRELIMINARY",
+      "group": "Envelope",
+      "label": "Roof transverse drainage crown at centerline",
+      "note": "Positive drainage; no ponding."
+    },
+    "skin_thickness": {
+      "value": 0.05,
+      "tag": "PRELIMINARY",
+      "group": "Construction",
+      "label": "Exterior skin thickness (5052-H32)",
+      "note": "0.040 on walls is a cost/weight lever (time_cost/cost_reduction_opportunities.md)."
+    },
+    "insulation_thickness": {
+      "value": 1.5,
+      "tag": "PRELIMINARY",
+      "group": "Construction",
+      "label": "Wall/roof insulation thickness"
+    },
+    "body_corner_radius": {
+      "value": 3.0,
+      "tag": "PARAMETRIC",
+      "group": "Styling",
+      "label": "Vertical corner radius (plan view)"
+    },
+    "roof_edge_radius": {
+      "value": 2.0,
+      "tag": "PARAMETRIC",
+      "group": "Styling",
+      "label": "Roof-to-wall edge radius"
+    },
+    "nose_projection": {
+      "value": 24.0,
+      "tag": "PARAMETRIC",
+      "group": "Envelope",
+      "label": "Nose (cab-over) projection forward of front wall",
+      "note": "Storage/desk volume only. Not a sleeping platform for two adults."
+    },
+    "nose_top_setback": {
+      "value": 10.0,
+      "tag": "PARAMETRIC",
+      "group": "Styling",
+      "label": "Nose front rake: top setback from lower front edge"
+    },
+    "nose_floor_thickness": {
+      "value": 2.5,
+      "tag": "PRELIMINARY",
+      "group": "Construction",
+      "label": "Nose floor (cab-over) thickness"
+    },
+    "door_width": {
+      "value": 26.0,
+      "tag": "PRELIMINARY",
+      "group": "Openings",
+      "label": "Rear door rough opening width",
+      "note": "Sized to a commercial cargo-trailer / RV door. Final value from the purchased door's datasheet."
+    },
+    "door_height": {
+      "value": 72.0,
+      "tag": "PRELIMINARY",
+      "group": "Openings",
+      "label": "Rear door rough opening height"
+    },
+    "door_sill_above_floor": {
+      "value": 1.0,
+      "tag": "PRELIMINARY",
+      "group": "Openings",
+      "label": "Door sill above interior floor"
+    },
+    "door_offset_y": {
+      "value": 0.0,
+      "tag": "PARAMETRIC",
+      "group": "Openings",
+      "label": "Door lateral offset from centerline (+left)"
+    },
+    "window_side_width": {
+      "value": 24.0,
+      "tag": "PRELIMINARY",
+      "group": "Openings",
+      "label": "Side window width"
+    },
+    "window_side_height": {
+      "value": 15.0,
+      "tag": "PRELIMINARY",
+      "group": "Openings",
+      "label": "Side window height"
+    },
+    "window_side_center_above_floor": {
+      "value": 50.0,
+      "tag": "PARAMETRIC",
+      "group": "Openings",
+      "label": "Side window center above interior floor"
+    },
+    "window_side_center_from_rear": {
+      "value": 30.0,
+      "tag": "PARAMETRIC",
+      "group": "Openings",
+      "label": "Side window center forward of camper rear face"
+    },
+    "window_nose_width": {
+      "value": 20.0,
+      "tag": "PRELIMINARY",
+      "group": "Openings",
+      "label": "Nose window width (optional)"
+    },
+    "window_nose_height": {
+      "value": 9.0,
+      "tag": "PRELIMINARY",
+      "group": "Openings",
+      "label": "Nose window height (optional)"
+    },
+    "util_profile": {
+      "value": "TSLOT_1010",
+      "tag": "PRELIMINARY",
+      "group": "Utility rails",
+      "label": "Owner accessory rail profile"
+    },
+    "utility_rail_left_count": {
+      "value": 3,
+      "tag": "PARAMETRIC",
+      "group": "Utility rails",
+      "label": "Left wall rail count"
+    },
+    "utility_rail_right_count": {
+      "value": 3,
+      "tag": "PARAMETRIC",
+      "group": "Utility rails",
+      "label": "Right wall rail count"
+    },
+    "utility_rail_front_count": {
+      "value": 1,
+      "tag": "PARAMETRIC",
+      "group": "Utility rails",
+      "label": "Front wall rail count"
+    },
+    "utility_rail_side_heights": {
+      "value": [
+        24.0,
+        44.0,
+        64.0
+      ],
+      "tag": "PARAMETRIC",
+      "group": "Utility rails",
+      "label": "Side rail centerline heights above interior floor"
+    },
+    "utility_rail_front_height": {
+      "value": 36.0,
+      "tag": "PARAMETRIC",
+      "group": "Utility rails",
+      "label": "Front rail centerline height above interior floor"
+    },
+    "utility_rail_end_inset": {
+      "value": 2.0,
+      "tag": "PARAMETRIC",
+      "group": "Utility rails",
+      "label": "Rail end inset from interior corners"
+    },
+    "roof_rack_boss_from_rear": {
+      "value": [
+        10.0,
+        44.0,
+        78.0
+      ],
+      "tag": "PRELIMINARY",
+      "group": "Provisions",
+      "label": "Roof-rack boss stations forward of camper rear",
+      "note": "v0.2: each station must coincide with a roof crossmember (ADR 0003)."
+    },
+    "roof_rack_boss_edge_inset": {
+      "value": 6.0,
+      "tag": "PRELIMINARY",
+      "group": "Provisions",
+      "label": "Roof-rack boss inset from body side"
+    },
+    "roof_rack_boss_diameter": {
+      "value": 2.0,
+      "tag": "PRELIMINARY",
+      "group": "Provisions",
+      "label": "Roof-rack boss diameter"
+    },
+    "roof_rack_boss_height": {
+      "value": 0.75,
+      "tag": "PRELIMINARY",
+      "group": "Provisions",
+      "label": "Roof-rack boss height above skin"
+    },
+    "power_zone_length": {
+      "value": 24.0,
+      "tag": "PRELIMINARY",
+      "group": "Provisions",
+      "label": "Reinforced floor zone length (battery / generator)"
+    },
+    "power_zone_width": {
+      "value": 20.0,
+      "tag": "PRELIMINARY",
+      "group": "Provisions",
+      "label": "Reinforced floor zone width"
+    },
+    "power_zone_from_front": {
+      "value": 2.0,
+      "tag": "PRELIMINARY",
+      "group": "Provisions",
+      "label": "Reinforced floor zone set back from front interior wall",
+      "note": "Forward placement keeps mass ahead of the rear axle."
+    },
+    "wire_chase_size": {
+      "value": 3.0,
+      "tag": "PRELIMINARY",
+      "group": "Provisions",
+      "label": "Wire chase square size (front-left corner, floor to roof)"
+    },
+    "human_height": {
+      "value": 79.0,
+      "tag": "FIXED",
+      "group": "Reference",
+      "label": "Human reference figure height (6'7\")"
+    }
+  },
+  "truck": {
+    "truck_bed_floor_height": {
+      "value": 34.0,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Ground to bed floor",
+      "measure": "Truck loaded as it will travel (fuel full, normal tire pressure), level ground. Tape from ground to top of bed floor at the tailgate, both sides; record average.",
+      "fig": "M1"
+    },
+    "truck_bed_rail_height": {
+      "value": 20.4,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Bed floor to top of bed rail (bed depth)",
+      "measure": "Straightedge across the rails; measure down to bed floor at front, middle, rear. Note rail caps if fitted.",
+      "fig": "M2"
+    },
+    "truck_bed_floor_width": {
+      "value": 69.3,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Inside bed width at floor (outside the wheel wells)",
+      "measure": "Across the bed floor ahead of the wheel wells, side wall to side wall, at floor level. Measure at front and at tailgate.",
+      "fig": "M3"
+    },
+    "truck_bed_inner_width_top": {
+      "value": 69.3,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Inside bed width at top of rails",
+      "measure": "Inside face to inside face just below the rail lip, front and rear.",
+      "fig": "M3"
+    },
+    "truck_bed_rail_width": {
+      "value": 5.3,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Bed rail top width (each side)",
+      "measure": "Inside lip to outside edge of the bed side, across the top of the rail.",
+      "fig": "M3"
+    },
+    "truck_tailgate_opening_width": {
+      "value": 65.0,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Tailgate opening width (narrowest point)",
+      "measure": "Tailgate open or removed. Narrowest clear width between the bed-side posts, including latch strikers.",
+      "fig": "M5"
+    },
+    "truck_wheel_well_width": {
+      "value": 50.6,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Clear width between wheel wells",
+      "measure": "Between the inner faces of the wheel wells at their widest bulge.",
+      "fig": "M3"
+    },
+    "truck_wheel_well_height": {
+      "value": 10.5,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Wheel well height above bed floor",
+      "measure": "Bed floor to the highest point of the wheel-well hump.",
+      "fig": "M2"
+    },
+    "truck_wheel_well_length": {
+      "value": 34.0,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Wheel well length along bed",
+      "measure": "Front to rear edge of the wheel-well hump at floor level.",
+      "fig": "M2"
+    },
+    "truck_cab_height_above_bed": {
+      "value": 46.0,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Bed floor to highest point of cab roof",
+      "measure": "Level across from the cab roof (incl. clearance lights, antenna base, roof marker lamps) down to bed floor.",
+      "fig": "M4"
+    },
+    "truck_cab_to_bed_clearance": {
+      "value": 4.0,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Gap: bed front wall outer face to cab back",
+      "measure": "At rail height and at cab roof height; record the smaller.",
+      "fig": "M4"
+    },
+    "truck_bed_front_wall_thickness": {
+      "value": 1.5,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Bed front wall thickness at the rail",
+      "measure": "Top of the front rail, inside lip to outside face.",
+      "fig": "M4"
+    },
+    "truck_cab_width": {
+      "value": 79.0,
+      "tag": "PRELIMINARY",
+      "group": "Truck reference",
+      "label": "Cab width (reference model only)"
+    },
+    "truck_cab_roof_length": {
+      "value": 58.0,
+      "tag": "PRELIMINARY",
+      "group": "Truck reference",
+      "label": "Cab roof length (reference model only)"
+    },
+    "truck_hood_height_above_bed": {
+      "value": 23.0,
+      "tag": "PRELIMINARY",
+      "group": "Truck reference",
+      "label": "Hood height above bed floor (reference model only)"
+    },
+    "truck_tire_diameter": {
+      "value": 35.0,
+      "tag": "PRELIMINARY",
+      "group": "Truck reference",
+      "label": "Tire diameter (reference model only)"
+    },
+    "truck_track_width": {
+      "value": 68.0,
+      "tag": "PRELIMINARY",
+      "group": "Truck reference",
+      "label": "Rear track width (reference model only)"
+    },
+    "truck_windshield_run": {
+      "value": 24.0,
+      "tag": "PRELIMINARY",
+      "group": "Truck reference",
+      "label": "Windshield horizontal run, roof front to hood (reference model only)"
+    },
+    "truck_front_overhang": {
+      "value": 38.0,
+      "tag": "PRELIMINARY",
+      "group": "Truck reference",
+      "label": "Front axle to front bumper (reference model only)"
+    },
+    "truck_body_bottom_below_bed": {
+      "value": 14.0,
+      "tag": "PRELIMINARY",
+      "group": "Truck reference",
+      "label": "Bed/cab body bottom below bed floor (reference model only)"
+    },
+    "truck_beltline_above_bed": {
+      "value": 18.0,
+      "tag": "PRELIMINARY",
+      "group": "Truck reference",
+      "label": "Cab beltline above bed floor (reference model only)"
+    }
+  },
+  "truck_variants": {
+    "SHORT": {
+      "label": "F-350 6.75 ft bed",
+      "truck_bed_length": {
+        "value": 81.9,
+        "tag": "VERIFY ON TRUCK",
+        "label": "Bed length at floor (6.75 ft bed)",
+        "measure": "Bed floor, inside front wall to tailgate inner face (tailgate closed).",
+        "fig": "M2"
+      },
+      "truck_rear_axle_from_bulkhead": {
+        "value": 48.0,
+        "tag": "VERIFY ON TRUCK",
+        "label": "Rear axle centerline aft of bed front wall (6.75 ft bed)",
+        "measure": "Drop a plumb line from the hub center; measure along the bed side to the inside of the front wall.",
+        "fig": "M2"
+      },
+      "truck_wheelbase": {
+        "value": 159.8,
+        "tag": "PRELIMINARY",
+        "label": "Wheelbase, crew cab 6.75 ft (reference model only)"
+      }
+    },
+    "LONG": {
+      "label": "F-350 8 ft bed",
+      "truck_bed_length": {
+        "value": 98.0,
+        "tag": "VERIFY ON TRUCK",
+        "label": "Bed length at floor (8 ft bed)",
+        "measure": "Bed floor, inside front wall to tailgate inner face (tailgate closed).",
+        "fig": "M2"
+      },
+      "truck_rear_axle_from_bulkhead": {
+        "value": 52.0,
+        "tag": "VERIFY ON TRUCK",
+        "label": "Rear axle centerline aft of bed front wall (8 ft bed)",
+        "measure": "Drop a plumb line from the hub center; measure along the bed side to the inside of the front wall.",
+        "fig": "M2"
+      },
+      "truck_wheelbase": {
+        "value": 176.0,
+        "tag": "PRELIMINARY",
+        "label": "Wheelbase, crew cab 8 ft (reference model only)"
+      }
+    }
+  },
+  "materials": {
+    "AL6061T6": {
+      "density_lb_in3": 0.0975,
+      "label": "6061-T6 aluminum",
+      "yield_ksi": 40.0,
+      "haz_yield_ksi": 24.0,
+      "status": "CONCEPT",
+      "note": "HAZ value is an approximate annealed-zone figure; cite Aluminum Design Manual before CALCULATED use."
+    },
+    "AL5052H32": {
+      "density_lb_in3": 0.0968,
+      "label": "5052-H32 aluminum sheet",
+      "status": "CONCEPT"
+    },
+    "AL6105T5": {
+      "density_lb_in3": 0.0975,
+      "label": "6105-T5 aluminum (T-slot extrusion)",
+      "status": "CONCEPT"
+    },
+    "XPS": {
+      "density_lb_in3": 0.00116,
+      "label": "XPS foam board (~2 pcf)",
+      "status": "CONCEPT"
+    }
+  },
+  "profiles": {
+    "TUBE_1X1_083": {
+      "kind": "SQUARE_TUBE",
+      "w": 1.0,
+      "h": 1.0,
+      "wall": 0.083,
+      "material": "AL6061T6",
+      "lb_per_in": 0.0291,
+      "note": "Bolted/bonded secondary only (ADR 0001)."
+    },
+    "TUBE_1X1_125": {
+      "kind": "SQUARE_TUBE",
+      "w": 1.0,
+      "h": 1.0,
+      "wall": 0.125,
+      "material": "AL6061T6",
+      "lb_per_in": 0.0426
+    },
+    "TUBE_1X2_125": {
+      "kind": "RECT_TUBE",
+      "w": 1.0,
+      "h": 2.0,
+      "wall": 0.125,
+      "material": "AL6061T6",
+      "lb_per_in": 0.067
+    },
+    "TUBE_2X2_125": {
+      "kind": "SQUARE_TUBE",
+      "w": 2.0,
+      "h": 2.0,
+      "wall": 0.125,
+      "material": "AL6061T6",
+      "lb_per_in": 0.0914
+    },
+    "TSLOT_1010": {
+      "kind": "TSLOT",
+      "w": 1.0,
+      "h": 1.0,
+      "wall": 0.0,
+      "material": "AL6105T5",
+      "lb_per_in": 0.0425,
+      "note": "80/20 1010 class; 0.5097 lb/ft catalog value (MANUFACTURER VERIFIED pending citation)."
+    },
+    "TSLOT_1020": {
+      "kind": "TSLOT",
+      "w": 1.0,
+      "h": 2.0,
+      "wall": 0.0,
+      "material": "AL6105T5",
+      "lb_per_in": 0.0763
+    },
+    "TSLOT_1515": {
+      "kind": "TSLOT",
+      "w": 1.5,
+      "h": 1.5,
+      "wall": 0.0,
+      "material": "AL6105T5",
+      "lb_per_in": 0.0848
+    }
+  },
+  "estimate_basis": {
+    "_note": "First-pass weight coefficients (status CONCEPT). Areas come from the envelope; coefficients are calibrated to PROJECT_HANDOFF.md \u00a72.5 and must be replaced by frame take-offs in v0.2.",
+    "floor_lb_per_ft2": {
+      "low": 6.9,
+      "high": 8.8,
+      "basis": "tub floor footprint",
+      "note": "Floor sandwich + tub structure + node plates."
+    },
+    "wall_frame_lb_per_ft2": {
+      "low": 0.72,
+      "high": 0.96,
+      "basis": "body wall area (side, front, rear)"
+    },
+    "roof_frame_lb_per_ft2": {
+      "low": 0.85,
+      "high": 1.2,
+      "basis": "roof area"
+    },
+    "nose_frame_lb_per_ft2": {
+      "low": 1.05,
+      "high": 1.5,
+      "basis": "nose surface area"
+    },
+    "skin_overlap_factor": {
+      "low": 1.0,
+      "high": 1.08,
+      "basis": "skin area x thickness x density",
+      "note": "Laps, flanges and doublers."
+    },
+    "interior_panel_lb_per_ft2": {
+      "low": 0.36,
+      "high": 0.46,
+      "basis": "insulated area (walls + roof + nose)"
+    },
+    "door_lb": {
+      "low": 45,
+      "high": 70
+    },
+    "window_lb_each": {
+      "low": 9,
+      "high": 11
+    },
+    "hardware_adhesive_lb": {
+      "low": 40,
+      "high": 60
+    },
+    "jacks_lb_set": {
+      "low": 100,
+      "high": 140,
+      "note": "Tracked separately from shell dry weight."
+    },
+    "sheet_waste_factor": {
+      "low": 1.1,
+      "high": 1.2,
+      "basis": "nesting waste on 4x8 sheets"
+    },
+    "sheet_area_in2": {
+      "value": 4608,
+      "note": "4 x 8 ft sheet"
+    }
+  },
+  "payload_reservations": {
+    "power_zone_lb": {
+      "value": 150,
+      "status": "CONCEPT",
+      "note": "Battery or solar generator; mass + footprint only (ADR 0003)."
+    },
+    "roof_rack_lb": {
+      "value": 120,
+      "status": "CONCEPT",
+      "note": "Roof rack + panels, distributed over six bosses."
+    }
+  }
+}
