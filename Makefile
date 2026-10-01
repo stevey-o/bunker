@@ -1,9 +1,9 @@
 PY := .venv/bin/python
 S  := scripts_code
 
-.PHONY: all setup sync render drawings reports validate clean
+.PHONY: all setup sync render drawings reports docs validate clean
 
-all: sync render drawings reports validate
+all: sync render drawings reports docs validate
 
 setup:
 	python3 -m venv .venv
@@ -23,6 +23,9 @@ reports: render
 	$(PY) $(S)/generate_cutlist.py
 	$(PY) $(S)/generate_weight_report.py
 	$(PY) $(S)/generate_cost_report.py
+
+docs: sync
+	$(PY) $(S)/generate_dimension_docs.py
 
 validate:
 	$(PY) $(S)/validate_model.py

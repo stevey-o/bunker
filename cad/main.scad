@@ -49,8 +49,11 @@ module proj_part() {
     else if (PART == "body_lower") body_lower();
     else if (PART == "body_upper") body_upper();
     else if (PART == "envelope") { tub_lower(); tub_upper(); body_lower(); body_upper(); }
+    else if (PART == "shell") envelope_shell();
     else if (PART == "door") rear_door();
     else if (PART == "windows") { side_windows(); nose_window(); }
+    else if (PART == "win_side") side_windows();
+    else if (PART == "win_nose") nose_window();
     else if (PART == "bosses") roof_rack_bosses();
     else if (PART == "rails") utility_rails();
     else if (PART == "truck_bed") truck_bed();
@@ -70,4 +73,9 @@ else if (VIEW == "interior") camper_interior();
 else if (VIEW == "registry") {
     envelope_registry(); rear_door(); side_windows(); nose_window(); roof_rack_bosses(); utility_rails();
 }
-else if (VIEW == "proj") projection() plane_map() proj_part();
+else if (VIEW == "proj") {
+    if (PLANE == "xsection")   // section looking forward at x = CUT_X: 2D coords (y, z)
+        projection(cut = true) multmatrix([[0, 1, 0, 0], [0, 0, 1, 0], [1, 0, 0, 0], [0, 0, 0, 1]])
+            translate([-CUT_X, 0, 0]) proj_part();
+    else projection() plane_map() proj_part();
+}

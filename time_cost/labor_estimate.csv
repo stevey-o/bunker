@@ -1,0 +1,10 @@
+phase,description,low_hours,high_hours,status,note
+measure,"Truck measurement + config update",2,4,CONCEPT,"Next physical action"
+weld_practice,"Novice aluminum welding practice + test coupons",15,40,CONCEPT,"Before any structural weld"
+floor,"Floor structure + tub",25,45,CONCEPT,"v0.2 detail required"
+walls_roof_nose,"Wall, roof and nose frames",40,70,CONCEPT,
+skin,"Skin layout, bonding, riveting",30,55,CONCEPT,
+insulation_panels,"Insulation and interior panel",20,35,CONCEPT,
+door_windows,"Door and window install + sealing",10,20,CONCEPT,
+rails_provisions,"T-slot rails, roof bosses, jack/tie-down structures",15,30,CONCEPT,
+water_test,"Water testing and rework",6,15,CONCEPT,

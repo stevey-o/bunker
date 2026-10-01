@@ -1,0 +1,8 @@
+item,description,low_usd,high_usd,status,note
+welder,"200-230 A MIG with spool gun (e.g. Hobart 210MVP + SpoolRunner 100, Eastwood MIG 180, Primeweld MIG 230)",800,1400,CONCEPT,"ADR 0001. One-time tooling; never in shell material cost"
+argon_cylinder,"Argon cylinder purchase or lease (80-125 cf)",200,400,CONCEPT,"100% argon at 25-35 CFH"
+saw,"Carbide-blade cold/miter saw for aluminum",150,450,CONCEPT,"Non-ferrous blade"
+rivet_tool,"Pneumatic or long-handle structural rivet tool",60,250,CONCEPT,
+drill_set,"Drill, step bits, cobalt bits, deburring tools",80,200,CONCEPT,
+clamps_squares,"Welding/assembly clamps, magnetic squares",100,250,CONCEPT,
+ppe,"Auto-darkening helmet, gloves, respirator",120,300,CONCEPT,

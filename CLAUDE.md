@@ -45,7 +45,8 @@ CAD, drawings, BOM, cut list, renderings, manual, cost and weight reports. No se
 
 `cad/config/dimensions.json` is the master. Never hand-edit generated files:
 `cad/config/dimensions.scad`, everything in `bom/`, everything in `output/`, the PNGs in
-`3D_renderings/`, and the PDFs in `drawings/`. Edit the source, then run `make all`.
+`3D_renderings/`, the PDFs in `drawings/`, `camper_versions/*/DIMENSIONS.md`, and
+`truck_data/measurement_templates/f350_measurement_sheet.*`. Edit the source, then run `make all`.
 
 Never scatter literal dimensions through `.scad` files; reference config variables. Keep modules small.
 
@@ -57,6 +58,7 @@ make sync       # dimensions.json -> dimensions.scad
 make render     # OpenSCAD renders + parts.json registry
 make drawings   # A01/A02/A03 PDFs
 make reports    # BOM, cut list, weight, cost
+make docs       # DIMENSIONS.md + truck measurement sheet
 make validate   # rule checks (min wall, IDs, statuses)
 make all
 ```

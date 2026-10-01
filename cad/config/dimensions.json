@@ -1,6 +1,8 @@
 {
   "_readme": "MASTER CONFIG. Single source of truth for MINUTEMAN. Edit here, then run `make all`. Units: inches, degrees, pounds, USD. Tags: FIXED | PARAMETRIC | PRELIMINARY | VERIFY ON TRUCK. Coordinate system: origin on the bed-floor top surface, truck centerline, at the inner face of the bed front wall (bulkhead). +X forward toward the cab, +Y left (driver side), +Z up.",
   "version": "0.1",
+  "revision_date": "2026-10-01",
+  "drawing_revision": "A",
   "build": {
     "FRAME_SYSTEM": {
       "value": "HYBRID",
@@ -668,6 +670,10 @@
     "sheet_area_in2": {
       "value": 4608,
       "note": "4 x 8 ft sheet"
+    },
+    "floor_tube_fraction": {
+      "value": 0.5,
+      "note": "Share of floor/tub mass that is purchased 6061 tube (rest: plate, sandwich core, sheet)."
     }
   },
   "payload_reservations": {

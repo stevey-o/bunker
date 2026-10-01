@@ -1,0 +1,13 @@
+cost_key,description,unit,low_usd,high_usd,basis,status,source
+skin_sheet,"5052-H32 sheet 0.050 x 48 x 96",sheet,130,230,"sheet count from envelope area x nesting waste",CONCEPT,"First-pass estimate (PROJECT_HANDOFF.md 2.4); get local metal-supplier quotes"
+tube_6061,"6061-T6 tube, mixed sizes",lb,3.00,5.00,"applied to estimated tube mass (wall+roof+nose frames + floor_tube_fraction of floor)",CONCEPT,"Typical retail ~$2-3/ft for 1x1x1/8 (~0.51 lb/ft); low end assumes bulk/remnant. Get quotes."
+TSLOT_1010,"1010-class T-slot extrusion incl. end fasteners",in,0.50,1.00,"cut length from parts registry",CONCEPT,"First-pass estimate ($6-12/ft)"
+door,"Commercial cargo-trailer / RV entry door",each,400,900,"one rear door",CONCEPT,"First-pass estimate"
+window,"RV / trailer window",each,100,200,"count from parts registry",CONCEPT,"First-pass estimate"
+rack_boss,"Roof-rack mounting boss (machined/bought insert + sealing)",each,8,20,"count from parts registry",CONCEPT,"First-pass estimate; not in handoff subtotal"
+insulation,"XPS foam board 1.5 in",ft2,0.55,0.90,"insulated envelope area",CONCEPT,"First-pass estimate"
+interior_panel,"Interior protective panel",ft2,0.72,1.45,"insulated envelope area",CONCEPT,"First-pass estimate"
+adhesive,"Structural adhesive + sealant",lot,150,300,"lot",CONCEPT,"First-pass estimate"
+fasteners,"Fasteners and rivets",lot,200,350,"lot",CONCEPT,"First-pass estimate"
+welding_consumables,"ER5356 wire, argon refills, tips",lot,150,300,"lot",CONCEPT,"First-pass estimate"
+jacks,"Camper jack set (4)",set,900,1600,"tracked separately, excluded from shell subtotal",CONCEPT,"First-pass estimate"

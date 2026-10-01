@@ -4,5 +4,6 @@
 //   FRAME_SYSTEM: "HYBRID" | "BOLTED_TUBE" | "TSLOT"  (ADR 0001)
 //   TRUCK:        "SHORT" | "LONG"
 VIEW = "exterior";   // "exterior" | "truck_fit" | "interior" | "registry" | "proj"
-PLANE = "side";      // projection plane for VIEW="proj": "side" | "front" | "top"
+PLANE = "side";      // projection plane for VIEW="proj": "side" | "front" | "top" | "xsection"
+CUT_X = 0;           // section station for PLANE="xsection"
 PART = "envelope";   // projection subject for VIEW="proj" (see main.scad proj_part)
