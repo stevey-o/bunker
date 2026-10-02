@@ -1,5 +1,5 @@
 product,type,construction,dry_weight_lb_low,dry_weight_lb_high,price_usd_low,price_usd_high,interior_standing,source_url,accessed
-MINUTEMAN v0.1 (estimate),DIY hard-side shell,"6061 frame (hybrid weld/bolt) + bonded 5052 skin",854,1071,3877,7950,80 in clear,bom/weight_report.md; bom/cost_report.md,2026-10-01
+MINUTEMAN v0.1 rev B (estimate),DIY hard-side shell,"6061 frame (hybrid weld/bolt) + bonded 5052 skin",985,1231,4402,8735,80 in clear,bom/weight_report.md; bom/cost_report.md,2026-10-01
 Kimbo 6,hard-side,"riveted 5052 monocoque",830,1200,20999,27990,,https://www.truckcampermagazine.com/buyers-guide/hard-side/kimbo-buyers-guide/,2026-10-01
 Kimbo 8,hard-side,"riveted aluminum shell",1275,1275,,,,https://mensgear.net/kimbo-8-camper/,2026-10-01
 Four Wheel Camper Hawk,pop-up,"welded aluminum frame, aluminum roof/siding",1100,1200,19995,29495,popped up only,https://fourwheelcampers.com/model/hawk-model-pop-up-truck-camper-leader-full-size-trucks/hawk-base-model/,2026-10-01

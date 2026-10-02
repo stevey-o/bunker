@@ -8,7 +8,7 @@ import json
 import re
 import sys
 
-from common import (GENERATED_HEADER, PARTS_JSON, ROOT, STATUSES, TAGS, load_config, params)
+from common import (GENERATED_HEADER, PARTS_JSON, ROOT, STATUSES, TAGS, load_config, params, variant_names)
 
 ID_RE = re.compile(r"^([A-Z]{2,5})-([A-Z]{1,4})-[A-Z]?[0-9]{2,3}$")
 MIN_WELDED_WALL = 0.125
@@ -55,7 +55,7 @@ def check_config(cfg):
     for section in ("camper", "truck"):
         bad += [k for k, v in cfg[section].items() if v.get("tag") not in TAGS]
     for vname, v in cfg["truck_variants"].items():
-        bad += ["%s.%s" % (vname, k) for k, x in v.items() if isinstance(x, dict) and x.get("tag") not in TAGS]
+        bad += ["%s.%s" % (vname, k) for k, x in v.items() if isinstance(x, dict) and "value" in x and x.get("tag") not in TAGS]
     check(not bad, "every dimension carries one tag of %s%s" % ("/".join(TAGS), ": " + ", ".join(bad) if bad else ""))
     missing = [k for k, v in cfg["truck"].items() if v["tag"] == "VERIFY ON TRUCK" and not v.get("measure")]
     check(not missing, "every truck VERIFY ON TRUCK value has measuring instructions%s" % (": " + ", ".join(missing) if missing else ""))
@@ -93,23 +93,25 @@ def check_generated():
 
 
 def check_geometry(cfg):
-    for v in cfg["truck_variants"]:
-        p = params(cfg, v)
-        t = "[%s] " % v
-        c2 = 2 * p["tub_side_clearance"]
-        check(p["camper_lower_tub_width"] <= p["truck_tailgate_opening_width"] - c2,
-              t + "tub %.1f passes tailgate opening %.1f with %.2f clearance" % (p["camper_lower_tub_width"], p["truck_tailgate_opening_width"], c2))
-        check(p["camper_lower_tub_width"] <= min(p["truck_bed_inner_width_top"], p["truck_bed_floor_width"]) - c2,
-              t + "tub fits between bed sides")
-        check(p["tub_base_width"] <= p["truck_wheel_well_width"] - c2, t + "tub base clears wheel wells laterally")
-        check(p["tub_step_z"] >= p["truck_wheel_well_height"] + p["wheel_well_clearance"] - 1e-6, t + "tub step clears wheel-well height")
-        check(p["camper_lower_tub_height"] > p["truck_bed_rail_height"], t + "body underside above bed rails")
-        check(p["nose_bottom_z"] >= p["truck_cab_height_above_bed"] + p["camper_to_cab_clearance"] - 1e-6, t + "nose clears cab roof")
-        check(p["nose_bottom_z"] > p["camper_lower_tub_height"], t + "nose underside above body underside")
-        check(p["camper_lower_length"] + p["camper_front_gap"] <= p["truck_bed_length"], t + "camper length fits bed")
-        check(p["floor_mid_ahead_of_axle"] > 0,
-              t + "camper floor midpoint %.1f in ahead of rear axle (proxy until CG calc)" % p["floor_mid_ahead_of_axle"])
-    p = params(cfg)
+    """Hard checks on the DESIGN_TRUCK. Other trucks are reported by generate_fit_study.py, not enforced here."""
+    from estimates import center_of_gravity
+    v = cfg["build"]["DESIGN_TRUCK"]["value"]
+    p = params(cfg, v)
+    t = "[%s] " % v
+    c2 = 2 * p["tub_side_clearance"]
+    check(p["camper_lower_tub_width"] <= p["truck_tailgate_opening_width"] - c2,
+          t + "tub %.1f passes tailgate opening %.1f with %.2f clearance" % (p["camper_lower_tub_width"], p["truck_tailgate_opening_width"], c2))
+    check(p["camper_lower_tub_width"] <= min(p["truck_bed_inner_width_top"], p["truck_bed_floor_width"]) - c2,
+          t + "tub fits between bed sides")
+    check(p["tub_base_width"] <= p["truck_wheel_well_width"] - c2 + 1e-6, t + "tub base clears wheel wells laterally")
+    check(p["tub_step_z"] >= p["truck_wheel_well_height"] + p["wheel_well_clearance"] - 1e-6, t + "tub step clears wheel-well height")
+    check(p["camper_lower_tub_height"] > p["truck_bed_rail_height"], t + "body underside above bed rails")
+    check(p["nose_bottom_z"] >= p["truck_cab_height_above_bed"] + p["camper_to_cab_clearance"] - 1e-6, t + "nose clears cab roof")
+    check(p["nose_bottom_z"] > p["camper_lower_tub_height"], t + "nose underside above body underside")
+    check(p["rear_overhang"] <= -p["tailgate_clearance"] + 1e-6,
+          t + "camper fits the bed with the tailgate CLOSED (rear clearance %.2f in, ADR 0004)" % -p["rear_overhang"])
+    m, x, _z = center_of_gravity(cfg, p, loaded=True)
+    check(x - p["rear_axle_x"] >= 0, t + "loaded CG %.1f in ahead of rear axle (estimate)" % (x - p["rear_axle_x"]))
     check(p["interior_height"] >= p["human_height"] + 1, "interior height gives >= 1 in headroom over 6'7\"")
     check(p["camper_body_width"] <= LEGAL_WIDTH, "body width within %.0f in legal limit" % LEGAL_WIDTH)
     check(p["door_top_z"] <= p["ceiling_z"], "door head below ceiling")
@@ -118,6 +120,9 @@ def check_geometry(cfg):
     hs = [p["interior_floor_z"] + h for h in p["utility_rail_side_heights"][:max(p["utility_rail_left_count"], p["utility_rail_right_count"])]]
     check(all(zmin < z < p["ceiling_z"] for z in hs), "side utility rails sit on the full-width body wall")
     check(max(p["roof_rack_boss_from_rear"]) <= p["overall_length"] - p["nose_top_setback"], "roof-rack bosses on the roof")
+    for name in variant_names(cfg):
+        params(cfg, name)  # every variant must at least derive cleanly
+    check(True, "all %d truck variants derive (fit verdicts: truck_data/fit_study.md)" % len(variant_names(cfg)))
 
 
 def main():

@@ -1,23 +1,12 @@
-# Ford F-350 reference data
+# Ford F-350 (2011) notes
 
-The model is seeded with **preliminary** values (PROJECT_HANDOFF.md §6). Every interface value is
-**VERIFY ON TRUCK** until measured with `../measurement_templates/f350_measurement_sheet.pdf`.
+The model's base truck is a **2011 F-350 Super Duty crew cab 4x4 SRW**. Sourced values and their confidence
+are in `../README.md`; every interface value stays **VERIFY ON TRUCK** until measured with
+`../measurement_templates/f350_measurement_sheet.pdf`.
 
-| Item | Seed value (in) | Notes |
-|---|---|---|
-| Ground to bed floor | ~34 | varies with 2WD/4WD, tires, load |
-| Bed depth (floor to rail top) | ~20.4 | |
-| Inside width at top | ~69.3 | |
-| Between wheel wells | ~50.6 | |
-| Bed length, 6.75 ft | ~81.9 | |
-| Bed length, 8 ft | ~98.0 | |
-| Cab roof above bed floor | ~46 | include roof marker lamps |
-| Rear axle aft of bed front wall | 48 (6.75) / 52 (8) | rough estimate; **no reliable source yet** |
-| Tailgate opening | ~65 | rough estimate; **no reliable source yet** |
-| Wheel-well height | ~10.5 | rough estimate; **no reliable source yet** |
-
-The last three rows are placeholders chosen so the model is plausible, not published Ford figures. They
-are the most likely values to move after measurement.
-
-`generic_short_bed/` and `generic_long_bed/` are reserved for future fitments; the config's
-`truck_variants` section already supports adding them.
+Things to confirm on the owner's truck first, because they move the design most:
+1. **Which box** (6.75 or 8 ft) and cab style. The design assumes 8 ft.
+2. **Rear axle position** (sheet row 6). This decides whether the CG works.
+3. **Tailgate opening width** (row 14). It sets the tub width (59.5 in now).
+4. **Ground to bed floor** (row 1) and **cab roof height** (row 11). They set travel height (~10'7") and nose clearance.
+5. **Camper package (option 471)** and the **door-jamb payload / Consumer Information Sheet** CG data.

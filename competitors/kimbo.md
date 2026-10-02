@@ -18,7 +18,7 @@ Sources (accessed 2026-10-01):
 ## Lessons for MINUTEMAN
 - **Monocoque riveted 5052 works** for a hard-side at this scale. That supports treating the skin as a
   structural shear diaphragm (A-004), though Kimbo rivets where MINUTEMAN bonds plus rivets.
-- An empty Kimbo 6 shell lands around 830 lb. That is the same class as MINUTEMAN's 854-1,071 lb
+- An empty Kimbo 6 shell lands around 830 lb. That is below MINUTEMAN's 985-1,231 lb
   estimate. Kimbo 6 is built for 6 ft beds, so it is a smaller camper. It is a sanity check that our
   estimate is not wildly off, and a reminder that our 80 in interior costs weight.
 - Price discrepancies between sources are large; confirm with the manufacturer before using these in any

@@ -25,90 +25,111 @@ def load_config():
         return json.load(f)
 
 
+def variant_names(cfg):
+    return list(cfg["truck_variants"])
+
+
 def base_params(cfg, variant=None, overrides=None):
     """Flat {name: value} for one truck variant, with optional overrides (used for sensitivity)."""
     variant = variant or cfg["build"]["TRUCK"]["value"]
-    p = {k: v["value"] for k, v in cfg["build"].items()}
+    v = cfg["truck_variants"][variant]
+    p = {k: x["value"] for k, x in cfg["build"].items()}
     p["TRUCK"] = variant
     for section in ("camper", "truck"):
-        p.update({k: v["value"] for k, v in cfg[section].items()})
-    p.update({k: v["value"] for k, v in cfg["truck_variants"][variant].items() if isinstance(v, dict)})
+        p.update({k: x["value"] for k, x in cfg[section].items()})
+    p.update({k: x["value"] for k, x in v.items() if isinstance(x, dict) and "value" in x})
+    p["TAILGATE"] = v["tailgate"]["value"]
     if overrides:
         p.update(overrides)
     return p
 
 
-# (name, label, tag, function) - tag describes the derived dimension's confidence.
+# (name, label, tag, scope, function). Scope "C" = camper geometry, always computed from the DESIGN_TRUCK
+# so the camper never changes shape with the truck shown; scope "T" = fit of the camper on the selected truck.
 DERIVED = [
-    ("tub_base_width", "Lower tub base width (between wheel wells)", "VERIFY ON TRUCK",
-     lambda p, d: p["truck_wheel_well_width"] - 2 * p["tub_side_clearance"]),
-    ("tub_step_z", "Lower tub step height above bed floor (clears wheel wells)", "VERIFY ON TRUCK",
-     lambda p, d: p["truck_wheel_well_height"] + p["wheel_well_clearance"]),
-    ("camper_lower_tub_height", "Lower tub height / body underside above bed floor", "VERIFY ON TRUCK",
-     lambda p, d: p["truck_bed_rail_height"] + p["body_rail_clearance"]),
-    ("camper_front_x", "Camper front face X", "PRELIMINARY", lambda p, d: -p["camper_front_gap"]),
-    ("camper_rear_x", "Camper rear face X", "PRELIMINARY",
-     lambda p, d: d["camper_front_x"] - p["camper_lower_length"]),
-    ("interior_floor_z", "Interior floor above bed floor", "PRELIMINARY", lambda p, d: p["floor_sandwich"]),
-    ("ceiling_z", "Ceiling above bed floor", "PRELIMINARY",
-     lambda p, d: d["interior_floor_z"] + p["interior_height"]),
-    ("roof_eave_z", "Roof eave above bed floor", "PRELIMINARY",
-     lambda p, d: d["ceiling_z"] + p["roof_thickness"]),
-    ("roof_crown_z", "Roof crown (highest point) above bed floor", "PRELIMINARY",
-     lambda p, d: d["roof_eave_z"] + p["roof_crown"]),
-    ("nose_bottom_z", "Nose underside above bed floor", "VERIFY ON TRUCK",
-     lambda p, d: p["truck_cab_height_above_bed"] + p["camper_to_cab_clearance"]),
-    ("nose_floor_z", "Nose interior floor above bed floor", "VERIFY ON TRUCK",
-     lambda p, d: d["nose_bottom_z"] + p["nose_floor_thickness"]),
-    ("nose_interior_height", "Nose interior clear height", "VERIFY ON TRUCK",
-     lambda p, d: d["ceiling_z"] - d["nose_floor_z"]),
-    ("nose_front_x", "Nose lower front edge X", "PARAMETRIC",
-     lambda p, d: d["camper_front_x"] + p["nose_projection"]),
-    ("overall_length", "Overall camper length (rear face to nose tip)", "PARAMETRIC",
-     lambda p, d: p["camper_lower_length"] + p["nose_projection"]),
-    ("overall_height", "Overall camper height (tub bottom to crown)", "PRELIMINARY", lambda p, d: d["roof_crown_z"]),
-    ("ground_to_eave", "Ground to roof eave on truck", "VERIFY ON TRUCK",
-     lambda p, d: p["truck_bed_floor_height"] + d["roof_eave_z"]),
-    ("ground_to_crown", "Ground to roof crown on truck (travel height, excl. rack)", "VERIFY ON TRUCK",
-     lambda p, d: p["truck_bed_floor_height"] + d["roof_crown_z"]),
-    ("body_interior_width", "Main body interior width", "PRELIMINARY",
-     lambda p, d: p["camper_body_width"] - 2 * p["wall_thickness"]),
-    ("tub_interior_base_width", "Interior floor width (tub base)", "VERIFY ON TRUCK",
-     lambda p, d: d["tub_base_width"] - 2 * p["wall_thickness"]),
-    ("interior_length", "Main body interior length (excl. nose)", "PRELIMINARY",
-     lambda p, d: p["camper_lower_length"] - 2 * p["wall_thickness"]),
-    ("cab_back_x", "Cab back face X", "VERIFY ON TRUCK",
-     lambda p, d: p["truck_bed_front_wall_thickness"] + p["truck_cab_to_bed_clearance"]),
-    ("nose_over_cab", "Nose overlap forward of cab back", "VERIFY ON TRUCK",
-     lambda p, d: d["nose_front_x"] - d["cab_back_x"]),
-    ("bed_length_unused", "Bed length behind camper (unused)", "VERIFY ON TRUCK",
-     lambda p, d: p["truck_bed_length"] - p["camper_lower_length"] - p["camper_front_gap"]),
-    ("rear_axle_x", "Rear axle X", "VERIFY ON TRUCK", lambda p, d: -p["truck_rear_axle_from_bulkhead"]),
-    ("floor_mid_ahead_of_axle", "Camper floor midpoint ahead of rear axle", "VERIFY ON TRUCK",
-     lambda p, d: (d["camper_front_x"] + d["camper_rear_x"]) / 2 - d["rear_axle_x"]),
-    ("door_bottom_z", "Door sill above bed floor", "PRELIMINARY",
-     lambda p, d: d["interior_floor_z"] + p["door_sill_above_floor"]),
-    ("door_top_z", "Door head above bed floor", "PRELIMINARY",
-     lambda p, d: d["door_bottom_z"] + p["door_height"]),
-    ("window_side_center_z", "Side window center above bed floor", "PARAMETRIC",
-     lambda p, d: d["interior_floor_z"] + p["window_side_center_above_floor"]),
-    ("headroom_6ft7", "Headroom over a 6'7\" person", "FIXED",
-     lambda p, d: p["interior_height"] - p["human_height"]),
+    ("tub_base_width", "Lower tub base width (between wheel wells)", "VERIFY ON TRUCK", "C",
+     lambda q: q["truck_wheel_well_width"] - 2 * q["tub_side_clearance"]),
+    ("tub_step_z", "Lower tub step height above bed floor (clears wheel wells)", "VERIFY ON TRUCK", "C",
+     lambda q: q["truck_wheel_well_height"] + q["wheel_well_clearance"]),
+    ("camper_lower_tub_height", "Lower tub height / body underside above bed floor", "VERIFY ON TRUCK", "C",
+     lambda q: q["truck_bed_rail_height"] + q["body_rail_clearance"]),
+    ("camper_front_x", "Camper front face X", "PRELIMINARY", "C", lambda q: -q["camper_front_gap"]),
+    ("camper_rear_x", "Camper rear face X", "PRELIMINARY", "C", lambda q: q["camper_front_x"] - q["camper_lower_length"]),
+    ("interior_floor_z", "Interior floor above bed floor", "PRELIMINARY", "C", lambda q: q["floor_sandwich"]),
+    ("ceiling_z", "Ceiling above bed floor", "PRELIMINARY", "C", lambda q: q["interior_floor_z"] + q["interior_height"]),
+    ("roof_eave_z", "Roof eave above bed floor", "PRELIMINARY", "C", lambda q: q["ceiling_z"] + q["roof_thickness"]),
+    ("roof_crown_z", "Roof crown (highest point) above bed floor", "PRELIMINARY", "C",
+     lambda q: q["roof_eave_z"] + q["roof_crown"]),
+    ("nose_bottom_z", "Nose underside above bed floor", "VERIFY ON TRUCK", "C",
+     lambda q: q["truck_cab_height_above_bed"] + q["camper_to_cab_clearance"]),
+    ("nose_floor_z", "Nose interior floor above bed floor", "VERIFY ON TRUCK", "C",
+     lambda q: q["nose_bottom_z"] + q["nose_floor_thickness"]),
+    ("nose_interior_height", "Nose interior clear height", "VERIFY ON TRUCK", "C",
+     lambda q: q["ceiling_z"] - q["nose_floor_z"]),
+    ("nose_front_x", "Nose lower front edge X", "PARAMETRIC", "C", lambda q: q["camper_front_x"] + q["nose_projection"]),
+    ("overall_length", "Overall camper length (rear face to nose tip)", "PARAMETRIC", "C",
+     lambda q: q["camper_lower_length"] + q["nose_projection"]),
+    ("overall_height", "Overall camper height (tub bottom to crown)", "PRELIMINARY", "C", lambda q: q["roof_crown_z"]),
+    ("body_interior_width", "Main body interior width", "PRELIMINARY", "C",
+     lambda q: q["camper_body_width"] - 2 * q["wall_thickness"]),
+    ("tub_interior_base_width", "Interior floor width (tub base)", "VERIFY ON TRUCK", "C",
+     lambda q: q["tub_base_width"] - 2 * q["wall_thickness"]),
+    ("interior_length", "Main body interior length (excl. nose)", "PRELIMINARY", "C",
+     lambda q: q["camper_lower_length"] - 2 * q["wall_thickness"]),
+    ("door_bottom_z", "Door sill above bed floor", "PRELIMINARY", "C",
+     lambda q: q["interior_floor_z"] + q["door_sill_above_floor"]),
+    ("door_top_z", "Door head above bed floor", "PRELIMINARY", "C", lambda q: q["door_bottom_z"] + q["door_height"]),
+    ("window_side_center_z", "Side window center above bed floor", "PARAMETRIC", "C",
+     lambda q: q["interior_floor_z"] + q["window_side_center_above_floor"]),
+    ("headroom_6ft7", "Headroom over a 6'7\" person", "FIXED", "C", lambda q: q["interior_height"] - q["human_height"]),
+    # ---- fit on the selected truck
+    ("ground_to_eave", "Ground to roof eave on truck", "VERIFY ON TRUCK", "T",
+     lambda q: q["truck_bed_floor_height"] + q["roof_eave_z"]),
+    ("ground_to_crown", "Ground to roof crown on truck (travel height, excl. rack)", "VERIFY ON TRUCK", "T",
+     lambda q: q["truck_bed_floor_height"] + q["roof_crown_z"]),
+    ("cab_back_x", "Cab back face X", "VERIFY ON TRUCK", "T",
+     lambda q: q["truck_bed_front_wall_thickness"] + q["truck_cab_to_bed_clearance"]),
+    ("nose_over_cab", "Nose overlap forward of cab back", "VERIFY ON TRUCK", "T", lambda q: q["nose_front_x"] - q["cab_back_x"]),
+    ("tailgate_x", "Bed end (closed tailgate inner face) X", "VERIFY ON TRUCK", "T", lambda q: -q["truck_bed_length"]),
+    ("rear_overhang", "Camper rear face past bed end (+ = overhangs, - = bed left over)", "VERIFY ON TRUCK", "T",
+     lambda q: q["tailgate_x"] - q["camper_rear_x"]),
+    ("rear_axle_x", "Rear axle X", "VERIFY ON TRUCK", "T", lambda q: -q["truck_rear_axle_from_bulkhead"]),
+    ("floor_mid_ahead_of_axle", "Camper floor midpoint ahead of rear axle", "VERIFY ON TRUCK", "T",
+     lambda q: (q["camper_front_x"] + q["camper_rear_x"]) / 2 - q["rear_axle_x"]),
+    ("cab_clearance", "Nose underside above this truck's cab roof", "VERIFY ON TRUCK", "T",
+     lambda q: q["nose_bottom_z"] - q["truck_cab_height_above_bed"]),
+    ("rail_clearance", "Body underside above this truck's bed rails", "VERIFY ON TRUCK", "T",
+     lambda q: q["camper_lower_tub_height"] - q["truck_bed_rail_height"]),
+    ("wheel_well_side_clearance", "Tub base to wheel well, each side", "VERIFY ON TRUCK", "T",
+     lambda q: (q["truck_wheel_well_width"] - q["tub_base_width"]) / 2),
+    ("wheel_well_top_clearance", "Tub step above wheel-well top", "VERIFY ON TRUCK", "T",
+     lambda q: q["tub_step_z"] - q["truck_wheel_well_height"]),
+    ("tailgate_side_clearance", "Tub to tailgate opening, each side", "VERIFY ON TRUCK", "T",
+     lambda q: (q["truck_tailgate_opening_width"] - q["camper_lower_tub_width"]) / 2),
+    ("bed_side_clearance", "Tub to bed side walls, each side", "VERIFY ON TRUCK", "T",
+     lambda q: (min(q["truck_bed_floor_width"], q["truck_bed_inner_width_top"]) - q["camper_lower_tub_width"]) / 2),
 ]
+CAMPER_SCOPE = {d[0] for d in DERIVED if d[3] == "C"}
 
 
-def derive(p):
-    d = {}
-    for name, _label, _tag, fn in DERIVED:
-        d[name] = round(fn(p, d), 4)
-    return d
+def derive(p, scopes=("C", "T")):
+    q = dict(p)
+    out = {}
+    for name, _label, _tag, scope, fn in DERIVED:
+        if scope in scopes:
+            q[name] = out[name] = round(fn(q), 4)
+    return out
 
 
 def params(cfg=None, variant=None, overrides=None):
-    """Base + derived values in one flat dict."""
+    """Base + derived values in one flat dict. Camper geometry comes from the DESIGN_TRUCK."""
     cfg = cfg or load_config()
+    design = cfg["build"]["DESIGN_TRUCK"]["value"]
+    pd = base_params(cfg, design, overrides)
+    camper = derive(pd, ("C",))
     p = base_params(cfg, variant, overrides)
-    p.update(derive(p))
+    p.update(camper)
+    p.update(derive(p, ("T",)))
     return p
 
 
@@ -133,18 +154,21 @@ def utility_rails(p):
 
 
 def skin_faces(p):
-    """Flat-pattern approximation of every exterior envelope face (sq in). Corner radii ignored.
+    """Flat-pattern approximation of every exterior envelope face. Corner radii ignored.
 
-    Returns list of dicts: id, description, width, height, area, group (walls/roof/nose/floor).
+    Returns list of dicts: id, description, width, height, area (sq in), group (walls/roof/nose),
+    and centroid cx, cz (model inches) for weight / CG estimates.
     """
     L = p["camper_lower_length"]
     W = p["camper_body_width"]
     tw, tb = p["camper_lower_tub_width"], p["tub_base_width"]
     z_step, z_body = p["tub_step_z"], p["camper_lower_tub_height"]
-    body_h = p["roof_eave_z"] - z_body
-    nose_h = p["roof_eave_z"] - p["nose_bottom_z"]
+    ze, zn = p["roof_eave_z"], p["nose_bottom_z"]
+    xr, xf, xn = p["camper_rear_x"], p["camper_front_x"], p["nose_front_x"]
+    xm = (xr + xf) / 2
+    body_h = ze - z_body
+    nose_h = ze - zn
     nose_top_len = p["nose_projection"] - p["nose_top_setback"]
-    front_body_h = p["nose_bottom_z"] - z_body
     tub_end_area = tb * z_step + tw * (z_body - z_step)
     door = p["door_width"] * p["door_height"]
     win_side = p["window_side_width"] * p["window_side_height"]
@@ -152,25 +176,27 @@ def skin_faces(p):
     nose_front_len = math.hypot(nose_h, p["nose_top_setback"])
     f = []
 
-    def add(id_, desc, w, h, group, area=None, cut=0.0):
+    def add(id_, desc, w, h, group, cx, cz, area=None, cut=0.0):
         f.append({"id": id_, "description": desc, "width": round(w, 2), "height": round(h, 2),
-                  "area": round((area if area is not None else w * h) - cut, 1), "group": group})
+                  "area": round((area if area is not None else w * h) - cut, 1), "group": group,
+                  "cx": round(cx, 2), "cz": round(cz, 2)})
 
     for s, name in (("L", "Left"), ("R", "Right")):
-        add("SKIN-%s-01" % s, "%s body side" % name, L, body_h, "walls", cut=win_side)
+        add("SKIN-%s-01" % s, "%s body side" % name, L, body_h, "walls", xm, (z_body + ze) / 2, cut=win_side)
         add("SKIN-%s-02" % s, "%s nose side (trapezoid)" % name, p["nose_projection"], nose_h, "nose",
-            area=(p["nose_projection"] + nose_top_len) / 2 * nose_h)
-        add("SKIN-%s-03" % s, "%s tub side, upper" % name, L, z_body - z_step, "walls")
-        add("SKIN-%s-04" % s, "%s tub side, lower" % name, L, z_step, "walls")
-        add("SKIN-%s-05" % s, "%s tub step ledge" % name, L, (tw - tb) / 2, "walls")
-        add("SKIN-%s-06" % s, "%s body underside overhang" % name, L, (W - tw) / 2, "walls")
-    add("SKIN-F-01", "Front tub face (stepped)", tw, z_body, "walls", area=tub_end_area)
-    add("SKIN-F-02", "Front body face below nose", W, front_body_h, "walls")
-    add("SKIN-NOSE-01", "Nose underside", W, p["nose_projection"], "nose")
-    add("SKIN-NOSE-02", "Nose raked front face", W, nose_front_len, "nose", cut=win_nose)
-    add("SKIN-B-01", "Rear face incl. tub (door cut out)", W, body_h + z_body, "walls",
+            xf + 0.45 * p["nose_projection"], (zn + ze) / 2, area=(p["nose_projection"] + nose_top_len) / 2 * nose_h)
+        add("SKIN-%s-03" % s, "%s tub side, upper" % name, L, z_body - z_step, "walls", xm, (z_step + z_body) / 2)
+        add("SKIN-%s-04" % s, "%s tub side, lower" % name, L, z_step, "walls", xm, z_step / 2)
+        add("SKIN-%s-05" % s, "%s tub step ledge" % name, L, (tw - tb) / 2, "walls", xm, z_step)
+        add("SKIN-%s-06" % s, "%s body underside overhang" % name, L, (W - tw) / 2, "walls", xm, z_body)
+    add("SKIN-F-01", "Front tub face (stepped)", tw, z_body, "walls", xf, z_body / 2, area=tub_end_area)
+    add("SKIN-F-02", "Front body face below nose", W, zn - z_body, "walls", xf, (z_body + zn) / 2)
+    add("SKIN-NOSE-01", "Nose underside", W, p["nose_projection"], "nose", (xf + xn) / 2, zn)
+    add("SKIN-NOSE-02", "Nose raked front face", W, nose_front_len, "nose", xn - p["nose_top_setback"] / 2,
+        (zn + ze) / 2, cut=win_nose)
+    add("SKIN-B-01", "Rear face incl. tub (door cut out)", W, body_h + z_body, "walls", xr, ze / 2,
         area=W * body_h + tub_end_area, cut=door)
-    add("SKIN-ROOF-01", "Roof", L + nose_top_len, W, "roof")
+    add("SKIN-ROOF-01", "Roof", L + nose_top_len, W, "roof", (xr + xn - p["nose_top_setback"]) / 2, ze)
     return f
 
 

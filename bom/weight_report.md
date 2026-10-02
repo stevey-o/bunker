@@ -5,30 +5,30 @@
 
 | Item | Low (lb) | High (lb) | Basis |
 |---|---:|---:|---|
-| Floor structure + tub | 184 | 234 | tub floor 26.6 ft2 |
-| Wall frames | 116 | 155 | wall area 161.0 ft2 |
-| Roof frame | 43 | 61 | roof area 51.1 ft2 |
-| Nose frame | 45 | 64 | nose area 42.7 ft2 |
-| Skin 5052 0.050" | 178 | 192 | 254.9 ft2 x t x density x laps |
-| Insulation 1.5" XPS | 64 | 64 | insulated area x t x density |
-| Interior panel | 92 | 117 | insulated area |
+| Floor structure + tub | 230 | 293 | tub floor 33.3 ft2 |
+| Wall frames | 133 | 177 | wall area 184.9 ft2 |
+| Roof frame | 52 | 74 | roof area 61.7 ft2 |
+| Nose frame | 49 | 70 | nose area 46.3 ft2 |
+| Skin 5052 0.050" | 204 | 220 | 292.9 ft2 x t x density x laps |
+| Insulation 1.5" XPS | 73 | 73 | insulated area x t x density |
+| Interior panel | 105 | 135 | insulated area |
 | Rear door | 45 | 70 | purchased |
 | Windows (3) | 27 | 33 | purchased |
-| T-slot utility rails (7) | 21 | 21 | registry length x lb/in |
+| T-slot utility rails (7) | 26 | 26 | registry length x lb/in |
 | Hardware + adhesive | 40 | 60 | allowance |
-| **Shell dry weight, excl. jacks** | **854** | **1071** | |
+| **Shell dry weight, excl. jacks** | **985** | **1231** | |
 | Jacks (4), tracked separately | 100 | 140 | |
-| **Shell incl. jacks** | **954** | **1211** | |
+| **Shell incl. jacks** | **1085** | **1371** | |
 
 ## Against the target
 
 Target dry weight: 850-950 lb.
-Estimate excluding jacks: **854-1071 lb**; including jacks: **954-1211 lb**.
+Estimate excluding jacks: **985-1231 lb**; including jacks: **1085-1371 lb**.
 
-The 850-950 lb target is reachable only **without jacks** and only at the low end of the range, which needs disciplined interior paneling. Interior panel and skin thickness are the two biggest levers (see `time_cost/cost_reduction_opportunities.md`). This is not an achieved weight.
+**The 850-950 lb target is not reachable with this envelope.** Even the low estimate (985 lb, excluding jacks) is 35 lb over the top of the target. The full-length 97 in camper (ADR 0004) is the main reason. Levers: 0.040 in wall skin, lighter interior panel, or a shorter camper. This is an estimate, not a weighed result.
 
 ## Sensitivity: interior height
 
-**Each +1 in of interior_height adds 5.2-6.3 lb and $9-20.** For comparison, 80 in vs. a 76 in interior costs roughly 21-25 lb and $37-78 versus a 76 in interior. Skin sheet count moves in whole-sheet steps, so the dollar figure is lumpy.
+**Each +1 in of interior_height adds 5.8-7.0 lb and $26-50** (averaged over +/-4 in). For comparison, 80 in vs. a 76 in interior costs roughly 23-28 lb and $105-201. Skin sheet count moves in whole-sheet steps, so actual dollar changes are lumpy.
 
 Payload reservations (not in dry weight): power zone 150 lb, roof rack + panels 120 lb (ADR 0003).

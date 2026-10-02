@@ -7,7 +7,7 @@ import csv
 import json
 import math
 
-from common import PARTS_JSON, ROOT, load_config, params, skin_faces, surface_areas, utility_rails
+from common import PARTS_JSON, ROOT, load_config, params, skin_faces, surface_areas, utility_rails, variant_names
 
 FT2 = 144.0
 
@@ -85,7 +85,7 @@ def cost(cfg, p, wrows=None):
         return float(u[key]["low_usd"]) * qlo, float(u[key]["high_usd"]) * qhi
 
     return [
-        ("5052 skin sheet (%d-%d sheets 4x8)" % (n_lo, n_hi),) + lh("skin_sheet", n_lo, n_hi) + ("area x waste / 32 ft2",),
+        ("5052 skin sheet (%s sheets 4x8)" % ("%d" % n_lo if n_lo == n_hi else "%d-%d" % (n_lo, n_hi)),) + lh("skin_sheet", n_lo, n_hi) + ("area x waste / 32 ft2",),
         ("6061 tube",) + lh("tube_6061", f_lo, f_hi) + ("tube mass %.0f-%.0f lb" % (f_lo, f_hi),),
         ("T-slot utility rails",) + lh(p["util_profile"], rails_in) + ("%.0f in total" % rails_in,),
         ("Rear door",) + lh("door", 1) + ("purchased",),
@@ -103,16 +103,76 @@ def totals(rows):
     return sum(r[1] for r in rows), sum(r[2] for r in rows)
 
 
-def height_sensitivity(cfg, variant="SHORT"):
-    """(lb_low, lb_high, usd_low, usd_high) per +1 in of interior_height."""
-    p0 = params(cfg, variant)
-    p1 = params(cfg, variant, {"interior_height": p0["interior_height"] + 1})
-    w0, w1 = weight(cfg, p0), weight(cfg, p1)
-    c0, c1 = cost(cfg, p0, w0), cost(cfg, p1, w1)
-    tw0, tw1, tc0, tc1 = totals(w0), totals(w1), totals(c0), totals(c1)
-    return tw1[0] - tw0[0], tw1[1] - tw0[1], tc1[0] - tc0[0], tc1[1] - tc0[1]
+def height_sensitivity(cfg, variant=None, span=4.0):
+    """(lb_low, lb_high, usd_low, usd_high) per +1 in of interior_height, averaged over +/- span inches
+    so a single whole-sheet step in skin count does not dominate the per-inch figure."""
+    h = cfg["camper"]["interior_height"]["value"]
+    out = []
+    for dh in (-span, span):
+        p = params(cfg, variant, {"interior_height": h + dh})
+        w = weight(cfg, p)
+        out.append((totals(w), totals(cost(cfg, p, w))))
+    (w0, c0), (w1, c1) = out
+    d = 2 * span
+    return (w1[0] - w0[0]) / d, (w1[1] - w0[1]) / d, (c1[0] - c0[0]) / d, (c1[1] - c0[1]) / d
 
 
 def load():
     cfg = load_config()
     return cfg, params(cfg)
+
+
+# ---------------------------------------------------------------- center of gravity
+def mass_items(cfg, p, loaded=False):
+    """(name, mass_lb, x, z) using the MEAN of each weight range. Distributed items follow face centroids.
+
+    CONCEPT estimate: replaces the v0.1 'floor midpoint' proxy. Replace with frame take-off in v0.2.
+    """
+    rows = {r[0]: (r[1] + r[2]) / 2 for r in weight(cfg, p)}
+    faces = skin_faces(p)
+    items = []
+
+    def spread(name, mass, groups):
+        sel = [f for f in faces if f["group"] in groups]
+        tot = sum(f["area"] for f in sel)
+        x = sum(f["area"] * f["cx"] for f in sel) / tot
+        z = sum(f["area"] * f["cz"] for f in sel) / tot
+        items.append((name, mass, x, z))
+
+    xm = (p["camper_front_x"] + p["camper_rear_x"]) / 2
+    for name, m in rows.items():
+        if name.startswith("Floor"):
+            items.append((name, m, xm, p["floor_sandwich"] / 2))
+        elif name == "Wall frames":
+            spread(name, m, ("walls",))
+        elif name == "Roof frame":
+            spread(name, m, ("roof",))
+        elif name == "Nose frame":
+            spread(name, m, ("nose",))
+        elif name.startswith(("Skin", "Insulation", "Interior panel", "Hardware")):
+            spread(name, m, ("walls", "roof", "nose"))
+        elif name == "Rear door":
+            items.append((name, m, p["camper_rear_x"], (p["door_bottom_z"] + p["door_top_z"]) / 2))
+        elif name.startswith("Windows"):
+            n = 2 + (1 if p["WINDOW_NOSE_ENABLED"] else 0)
+            ws = 2 * (p["camper_rear_x"] + p["window_side_center_from_rear"])
+            wn = p["nose_front_x"] - p["nose_top_setback"] / 2 if n == 3 else 0
+            items.append((name, m, (ws + wn) / n, p["window_side_center_z"]))
+        elif name.startswith("T-slot"):
+            items.append((name, m, xm, p["interior_floor_z"] + 44))
+    if loaded:
+        b = cfg["estimate_basis"]
+        r = cfg["payload_reservations"]
+        items.append(("Jacks (4)", (b["jacks_lb_set"]["low"] + b["jacks_lb_set"]["high"]) / 2, xm, 40))
+        pz = p["camper_front_x"] - p["wall_thickness"] - p["power_zone_from_front"] - p["power_zone_length"] / 2
+        items.append(("Power zone reservation", r["power_zone_lb"]["value"], pz, p["interior_floor_z"] + 6))
+        bx = p["camper_rear_x"] + sum(p["roof_rack_boss_from_rear"]) / len(p["roof_rack_boss_from_rear"])
+        items.append(("Roof rack reservation", r["roof_rack_lb"]["value"], bx, p["roof_crown_z"] + 4))
+        items.append(("Owner gear allowance", p["owner_gear_allowance_lb"], xm, p["interior_floor_z"] + 12))
+    return items
+
+
+def center_of_gravity(cfg, p, loaded=False):
+    items = mass_items(cfg, p, loaded)
+    m = sum(i[1] for i in items)
+    return m, sum(i[1] * i[2] for i in items) / m, sum(i[1] * i[3] for i in items) / m

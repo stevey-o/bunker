@@ -7,20 +7,22 @@
 
 | # | Fig | Measurement | How | Model now | Left / A | Right / B |
 |---|---|---|---|---|---|---|
-| 1 | M1 | Ground to bed floor | Truck loaded as it will travel (fuel full, normal tire pressure), level ground. Tape from ground to top of bed floor at the tailgate, both sides; record average. | 34 | ______ | ______ |
-| 2 | M2 | Bed floor to top of bed rail (bed depth) | Straightedge across the rails; measure down to bed floor at front, middle, rear. Note rail caps if fitted. | 20.4 | ______ | ______ |
+| 1 | M1 | Ground to bed floor | Truck loaded as it will travel (fuel full, normal tire pressure), level ground. Tape from ground to top of bed floor at the tailgate, both sides; record average. | 39.5 | ______ | ______ |
+| 2 | M2 | Bed floor to top of bed rail (bed depth) | Straightedge across the rails; measure down to bed floor at front, middle, rear. Note rail caps if fitted. | 20 | ______ | ______ |
 | 3 | M2 | Wheel well height above bed floor | Bed floor to the highest point of the wheel-well hump. | 10.5 | ______ | ______ |
 | 4 | M2 | Wheel well length along bed | Front to rear edge of the wheel-well hump at floor level. | 34 | ______ | ______ |
-| 5 | M2 | Bed length at floor | Bed floor, inside front wall to tailgate inner face (tailgate closed). | 81.9 (6.75) / 98 (8) | ______ | ______ |
-| 6 | M2 | Rear axle centerline aft of bed front wall | Drop a plumb line from the hub center; measure along the bed side to the inside of the front wall. | 48 (6.75) / 52 (8) | ______ | ______ |
-| 7 | M3 | Inside bed width at floor (outside the wheel wells) | Across the bed floor ahead of the wheel wells, side wall to side wall, at floor level. Measure at front and at tailgate. | 69.3 | ______ | ______ |
-| 8 | M3 | Inside bed width at top of rails | Inside face to inside face just below the rail lip, front and rear. | 69.3 | ______ | ______ |
-| 9 | M3 | Bed rail top width (each side) | Inside lip to outside edge of the bed side, across the top of the rail. | 5.3 | ______ | ______ |
-| 10 | M3 | Clear width between wheel wells | Between the inner faces of the wheel wells at their widest bulge. | 50.6 | ______ | ______ |
-| 11 | M4 | Bed floor to highest point of cab roof | Level across from the cab roof (incl. clearance lights, antenna base, roof marker lamps) down to bed floor. | 46 | ______ | ______ |
+| 5 | M2 | Bed length at floor | Bed floor, inside front wall to tailgate inner face (tailgate closed). | 98 (8 ft) / 81.8 (6.75) | ______ | ______ |
+| 6 | M2 | Rear axle centerline aft of bed front wall | Drop a plumb line from the hub center; measure along the bed side to the inside of the front wall. | 51.2 (8 ft) / 35 (6.75) | ______ | ______ |
+| 7 | M3 | Inside bed width at floor (outside the wheel wells) | Across the bed floor ahead of the wheel wells, side wall to side wall, at floor level. Measure at front and at tailgate. | 66 | ______ | ______ |
+| 8 | M3 | Inside bed width at top of rails | Inside face to inside face just below the rail lip, front and rear. | 66 | ______ | ______ |
+| 9 | M3 | Bed rail top width (each side) | Inside lip to outside edge of the bed side, across the top of the rail. | 6.5 | ______ | ______ |
+| 10 | M3 | Clear width between wheel wells | Between the inner faces of the wheel wells at their widest bulge. | 50.9 | ______ | ______ |
+| 11 | M4 | Bed floor to highest point of cab roof | Level across from the cab roof (incl. clearance lights, antenna base, roof marker lamps) down to bed floor. | 41.5 | ______ | ______ |
 | 12 | M4 | Gap: bed front wall outer face to cab back | At rail height and at cab roof height; record the smaller. | 4 | ______ | ______ |
 | 13 | M4 | Bed front wall thickness at the rail | Top of the front rail, inside lip to outside face. | 1.5 | ______ | ______ |
-| 14 | M5 | Tailgate opening width (narrowest point) | Tailgate open or removed. Narrowest clear width between the bed-side posts, including latch strikers. | 65 | ______ | ______ |
+| 14 | M5 | Tailgate opening width (narrowest point) | Tailgate open or removed. Narrowest clear width between the bed-side posts, including latch strikers. | 61 | ______ | ______ |
+| 15 | M5 | Tailgate length, hinge to top edge (projects rearward when down) | Tailgate down: hinge line to the far edge, along the tailgate. | 20 | ______ | ______ |
+| 16 | M5 | Lowered tailgate top surface above bed floor | Tailgate down: straightedge on bed floor extended over the tailgate; measure the gap or step at the tailgate (+ if the tailgate is higher). | 0.5 | ______ | ______ |
 
 ## Also record
 

@@ -30,19 +30,25 @@ def gimbal(rx, rz):
 
 # (output path, VIEW, TRUCK, camera args)
 RENDERS = [
-    ("exterior/01_rear_iso.png", "exterior", "SHORT", [gimbal(62, 225), ISO]),
-    ("exterior/02_front_iso.png", "exterior", "SHORT", [gimbal(62, 45), ISO]),
-    ("exterior/03_left.png", "exterior", "SHORT", [gimbal(90, 180), ORTHO]),
-    ("exterior/04_right.png", "exterior", "SHORT", [gimbal(90, 0), ORTHO]),
-    ("exterior/05_front.png", "exterior", "SHORT", [gimbal(90, 90), ORTHO]),
-    ("exterior/06_rear.png", "exterior", "SHORT", [gimbal(90, 270), ORTHO]),
-    ("exterior/07_top.png", "exterior", "SHORT", [gimbal(0, 0), ORTHO]),
-    ("truck_fit/01_short_bed.png", "truck_fit", "SHORT", [gimbal(65, 230), ISO]),
-    ("truck_fit/02_long_bed.png", "truck_fit", "LONG", [gimbal(65, 230), ISO]),
-    ("truck_fit/03_side_clearance.png", "truck_fit", "SHORT", [gimbal(90, 180), ORTHO]),
-    ("truck_fit/04_cab_clearance.png", "truck_fit", "SHORT",
+    ("exterior/01_rear_iso.png", "exterior", "F350_LONG", [gimbal(62, 225), ISO]),
+    ("exterior/02_front_iso.png", "exterior", "F350_LONG", [gimbal(62, 45), ISO]),
+    ("exterior/03_left.png", "exterior", "F350_LONG", [gimbal(90, 180), ORTHO]),
+    ("exterior/04_right.png", "exterior", "F350_LONG", [gimbal(90, 0), ORTHO]),
+    ("exterior/05_front.png", "exterior", "F350_LONG", [gimbal(90, 90), ORTHO]),
+    ("exterior/06_rear.png", "exterior", "F350_LONG", [gimbal(90, 270), ORTHO]),
+    ("exterior/07_top.png", "exterior", "F350_LONG", [gimbal(0, 0), ORTHO]),
+    ("truck_fit/01_short_bed.png", "truck_fit", "F350_SHORT", [gimbal(65, 230), ISO]),
+    ("truck_fit/02_long_bed.png", "truck_fit", "F350_LONG", [gimbal(65, 230), ISO]),
+    ("truck_fit/03_side_clearance.png", "truck_fit", "F350_LONG", [gimbal(90, 180), ORTHO]),
+    ("truck_fit/04_cab_clearance.png", "truck_fit", "F350_LONG",
      ["--camera=10,300,46,10,0,46", ORTHO, "FIXED"]),
-    ("interior_shell/01_utility_rails.png", "interior", "SHORT", [gimbal(58, 270), ISO, "FULL"]),
+    ("truck_fit/05_short_bed_side.png", "truck_fit", "F350_SHORT", [gimbal(90, 180), ORTHO]),
+    ("interior_shell/01_utility_rails.png", "interior", "F350_LONG", [gimbal(58, 270), ISO, "FULL"]),
+    ("fit_study/01_f150_6p5ft.png", "truck_fit", "F150_65", [gimbal(90, 180), ORTHO]),
+    ("fit_study/02_f150_5p5ft.png", "truck_fit", "F150_55", [gimbal(90, 180), ORTHO]),
+    ("fit_study/03_tacoma_6ft.png", "truck_fit", "TACOMA_6", [gimbal(90, 180), ORTHO]),
+    ("fit_study/04_tacoma_5ft.png", "truck_fit", "TACOMA_5", [gimbal(90, 180), ORTHO]),
+    ("fit_study/05_tacoma_rear_iso.png", "truck_fit", "TACOMA_6", [gimbal(60, 250), ISO]),
 ]
 
 

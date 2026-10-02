@@ -9,11 +9,11 @@ already ~34" off the ground on an F-350.
 
 | Element | Value (in) |
 |---|---|
-| Ground to bed floor | ~34 (VERIFY ON TRUCK) |
+| Ground to bed floor | ~39.5 on a 2011 F-350 4x4 (VERIFY ON TRUCK; was ~34 in the first pass) |
 | Floor sandwich | ~3 |
 | Interior clear height | 80 |
 | Roof structure + skin | ~3.5 (+0.75 drainage crown at centerline) |
-| **Ground to roof (eave / crown)** | **~120.5 / ~121.25 (≈10'0")** |
+| **Ground to roof (eave / crown)** | **~126.0 / ~126.75 (≈10'7")** |
 
 ## Decision
 - `interior_height = 80`, fully parametric.
@@ -26,6 +26,6 @@ already ~34" off the ground on an F-350.
   of interior height, so the cost of the 6'7" requirement is visible.
 
 ## Consequences
-At ~10'0" the camper is in the normal range for hard-side truck campers but is tall. Low bridges,
+At ~10'7" the camper is in the normal range for hard-side truck campers but is tall. Low bridges,
 parking garages, drive-throughs, and some fuel-station canopies become route considerations. The
 center of gravity rises, which matters for v0.2 stability work.

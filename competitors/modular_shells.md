@@ -10,7 +10,7 @@ MINUTEMAN's concept is a shell that is useful empty and grows over time. Commerc
 | Scout Yoho | Modular interior, removable gear | $19,240 | New Atlas (link in composite_campers.md) |
 
 **Takeaway:** commercially, an empty or near-empty hard shell costs **$17,000-21,000**. MINUTEMAN's
-$3,900-7,950 material estimate (excluding jacks, tooling, and labor) is the DIY value proposition. The
+$4,400-8,700 material estimate (excluding jacks, tooling, and labor) is the DIY value proposition. The
 owner's labor (roughly 163-314 h, `time_cost/labor_estimate.csv`) is the price paid for the difference.
 
 ## Open questions

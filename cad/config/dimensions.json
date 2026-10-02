@@ -2,7 +2,7 @@
   "_readme": "MASTER CONFIG. Single source of truth for MINUTEMAN. Edit here, then run `make all`. Units: inches, degrees, pounds, USD. Tags: FIXED | PARAMETRIC | PRELIMINARY | VERIFY ON TRUCK. Coordinate system: origin on the bed-floor top surface, truck centerline, at the inner face of the bed front wall (bulkhead). +X forward toward the cab, +Y left (driver side), +Z up.",
   "version": "0.1",
   "revision_date": "2026-10-01",
-  "drawing_revision": "A",
+  "drawing_revision": "B",
   "build": {
     "FRAME_SYSTEM": {
       "value": "HYBRID",
@@ -15,10 +15,14 @@
       "note": "ADR 0001. Selects the v0.2+ frame architecture; v0.1 envelope is identical for all three."
     },
     "TRUCK": {
-      "value": "SHORT",
+      "value": "F350_LONG",
       "options": [
-        "SHORT",
-        "LONG"
+        "F350_LONG",
+        "F350_SHORT",
+        "F150_65",
+        "F150_55",
+        "TACOMA_6",
+        "TACOMA_5"
       ],
       "tag": "PARAMETRIC",
       "note": "Truck reference variant shown in the model."
@@ -27,15 +31,20 @@
       "value": true,
       "tag": "PARAMETRIC",
       "note": "Optional forward-facing nose window."
+    },
+    "DESIGN_TRUCK": {
+      "value": "F350_LONG",
+      "tag": "FIXED",
+      "note": "The camper envelope is sized to this truck (ADR 0004). Every other truck is checked against the fixed camper, never used to resize it."
     }
   },
   "camper": {
     "camper_lower_length": {
-      "value": 78.0,
-      "tag": "PARAMETRIC",
+      "value": 97.0,
+      "tag": "FIXED",
       "group": "Envelope",
       "label": "Lower tub / main body length",
-      "note": "Must fit the shortest supported bed (6.75 ft)."
+      "note": "Owner requirement (ADR 0004): fills the 8 ft bed with the tailgate closed. 98.0 bed - 0.5 front gap - 0.5 tailgate clearance."
     },
     "camper_body_width": {
       "value": 80.0,
@@ -45,11 +54,11 @@
       "note": "Legal width limit is 102 in; 80 matches cab width for low drag."
     },
     "camper_lower_tub_width": {
-      "value": 63.0,
+      "value": 59.5,
       "tag": "VERIFY ON TRUCK",
       "group": "Envelope",
       "label": "Lower tub width (upper step, between rails)",
-      "note": "Must pass through the tailgate opening and fit between bed sides with clearance."
+      "note": "Must pass the 2011 F-350 tailgate opening (~61 in) with clearance; 63 in would not."
     },
     "tub_side_clearance": {
       "value": 0.75,
@@ -326,64 +335,102 @@
       "tag": "FIXED",
       "group": "Reference",
       "label": "Human reference figure height (6'7\")"
+    },
+    "tailgate_clearance": {
+      "value": 0.5,
+      "tag": "PRELIMINARY",
+      "group": "Clearance",
+      "label": "Camper rear face to closed tailgate (design truck)"
+    },
+    "owner_gear_allowance_lb": {
+      "value": 300,
+      "tag": "PRELIMINARY",
+      "group": "Payload",
+      "label": "Owner gear allowance for payload / CG checks (lb)",
+      "note": "Water, food, tools, bedding. Placed at floor center for CG. Not part of dry weight."
     }
   },
   "truck": {
     "truck_bed_floor_height": {
-      "value": 34.0,
+      "value": 39.5,
       "tag": "VERIFY ON TRUCK",
       "group": "Truck",
       "label": "Ground to bed floor",
       "measure": "Truck loaded as it will travel (fuel full, normal tire pressure), level ground. Tape from ground to top of bed floor at the tailgate, both sides; record average.",
-      "fig": "M1"
+      "fig": "M1",
+      "source": "Ford 2011 guide: F-350 SRW max ground-to-closed-tailgate 59-60 in, minus 20.0 in box depth. 4x4 unloaded upper bound."
     },
     "truck_bed_rail_height": {
-      "value": 20.4,
+      "value": 20.0,
       "tag": "VERIFY ON TRUCK",
       "group": "Truck",
       "label": "Bed floor to top of bed rail (bed depth)",
       "measure": "Straightedge across the rails; measure down to bed floor at front, middle, rear. Note rail caps if fitted.",
-      "fig": "M2"
+      "fig": "M2",
+      "source": "2011 F-250/350/450 inside box height 20.0 in (ford-trucks.com spec summary; cars.com 20 in)"
     },
     "truck_bed_floor_width": {
-      "value": 69.3,
+      "value": 66.0,
       "tag": "VERIFY ON TRUCK",
       "group": "Truck",
       "label": "Inside bed width at floor (outside the wheel wells)",
       "measure": "Across the bed floor ahead of the wheel wells, side wall to side wall, at floor level. Measure at front and at tailgate.",
-      "fig": "M3"
+      "fig": "M3",
+      "source": "Estimate: no reliable 2011 figure found (2023+ Super Duty max inside width 66.9 in, armorthane.com)"
     },
     "truck_bed_inner_width_top": {
-      "value": 69.3,
+      "value": 66.0,
       "tag": "VERIFY ON TRUCK",
       "group": "Truck",
       "label": "Inside bed width at top of rails",
       "measure": "Inside face to inside face just below the rail lip, front and rear.",
-      "fig": "M3"
+      "fig": "M3",
+      "source": "Estimate, as above"
     },
     "truck_bed_rail_width": {
-      "value": 5.3,
+      "value": 6.5,
       "tag": "VERIFY ON TRUCK",
       "group": "Truck",
       "label": "Bed rail top width (each side)",
       "measure": "Inside lip to outside edge of the bed side, across the top of the rail.",
-      "fig": "M3"
+      "fig": "M3",
+      "source": "Estimate: ~79-80 in outer width less inside width"
     },
     "truck_tailgate_opening_width": {
-      "value": 65.0,
+      "value": 61.0,
       "tag": "VERIFY ON TRUCK",
       "group": "Truck",
       "label": "Tailgate opening width (narrowest point)",
       "measure": "Tailgate open or removed. Narrowest clear width between the bed-side posts, including latch strikers.",
-      "fig": "M5"
+      "fig": "M5",
+      "source": "2011 Super Duty tailgate width 61 in (ford-trucks.com spec summary, not independently confirmed)"
+    },
+    "truck_tailgate_length": {
+      "value": 20.0,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Tailgate length, hinge to top edge (projects rearward when down)",
+      "measure": "Tailgate down: hinge line to the far edge, along the tailgate.",
+      "fig": "M5",
+      "source": "Approximately the box depth"
+    },
+    "truck_tailgate_down_offset": {
+      "value": 0.5,
+      "tag": "VERIFY ON TRUCK",
+      "group": "Truck",
+      "label": "Lowered tailgate top surface above bed floor",
+      "measure": "Tailgate down: straightedge on bed floor extended over the tailgate; measure the gap or step at the tailgate (+ if the tailgate is higher).",
+      "fig": "M5",
+      "source": "Estimate"
     },
     "truck_wheel_well_width": {
-      "value": 50.6,
+      "value": 50.9,
       "tag": "VERIFY ON TRUCK",
       "group": "Truck",
       "label": "Clear width between wheel wells",
       "measure": "Between the inner faces of the wheel wells at their widest bulge.",
-      "fig": "M3"
+      "fig": "M3",
+      "source": "2011 F-350 cargo width between wheelhouses 50.9 in (ford-trucks.com spec summary; cars.com 51 in)"
     },
     "truck_wheel_well_height": {
       "value": 10.5,
@@ -391,7 +438,8 @@
       "group": "Truck",
       "label": "Wheel well height above bed floor",
       "measure": "Bed floor to the highest point of the wheel-well hump.",
-      "fig": "M2"
+      "fig": "M2",
+      "source": "Estimate: no reliable source"
     },
     "truck_wheel_well_length": {
       "value": 34.0,
@@ -399,15 +447,17 @@
       "group": "Truck",
       "label": "Wheel well length along bed",
       "measure": "Front to rear edge of the wheel-well hump at floor level.",
-      "fig": "M2"
+      "fig": "M2",
+      "source": "Estimate: no reliable source"
     },
     "truck_cab_height_above_bed": {
-      "value": 46.0,
+      "value": 41.5,
       "tag": "VERIFY ON TRUCK",
       "group": "Truck",
       "label": "Bed floor to highest point of cab roof",
       "measure": "Level across from the cab roof (incl. clearance lights, antenna base, roof marker lamps) down to bed floor.",
-      "fig": "M4"
+      "fig": "M4",
+      "source": "2011 F-350 crew 4x4 overall height 80.8 in (iseecars.com) minus 39.5 in bed floor"
     },
     "truck_cab_to_bed_clearance": {
       "value": 4.0,
@@ -415,7 +465,8 @@
       "group": "Truck",
       "label": "Gap: bed front wall outer face to cab back",
       "measure": "At rail height and at cab roof height; record the smaller.",
-      "fig": "M4"
+      "fig": "M4",
+      "source": "Estimate"
     },
     "truck_bed_front_wall_thickness": {
       "value": 1.5,
@@ -423,10 +474,11 @@
       "group": "Truck",
       "label": "Bed front wall thickness at the rail",
       "measure": "Top of the front rail, inside lip to outside face.",
-      "fig": "M4"
+      "fig": "M4",
+      "source": "Estimate"
     },
     "truck_cab_width": {
-      "value": 79.0,
+      "value": 79.9,
       "tag": "PRELIMINARY",
       "group": "Truck reference",
       "label": "Cab width (reference model only)"
@@ -438,13 +490,13 @@
       "label": "Cab roof length (reference model only)"
     },
     "truck_hood_height_above_bed": {
-      "value": 23.0,
+      "value": 18.0,
       "tag": "PRELIMINARY",
       "group": "Truck reference",
       "label": "Hood height above bed floor (reference model only)"
     },
     "truck_tire_diameter": {
-      "value": 35.0,
+      "value": 33.0,
       "tag": "PRELIMINARY",
       "group": "Truck reference",
       "label": "Tire diameter (reference model only)"
@@ -459,7 +511,7 @@
       "value": 24.0,
       "tag": "PRELIMINARY",
       "group": "Truck reference",
-      "label": "Windshield horizontal run, roof front to hood (reference model only)"
+      "label": "Windshield horizontal run (reference model only)"
     },
     "truck_front_overhang": {
       "value": 38.0,
@@ -474,55 +526,483 @@
       "label": "Bed/cab body bottom below bed floor (reference model only)"
     },
     "truck_beltline_above_bed": {
-      "value": 18.0,
+      "value": 14.0,
       "tag": "PRELIMINARY",
       "group": "Truck reference",
       "label": "Cab beltline above bed floor (reference model only)"
     }
   },
   "truck_variants": {
-    "SHORT": {
-      "label": "F-350 6.75 ft bed",
-      "truck_bed_length": {
-        "value": 81.9,
-        "tag": "VERIFY ON TRUCK",
-        "label": "Bed length at floor (6.75 ft bed)",
-        "measure": "Bed floor, inside front wall to tailgate inner face (tailgate closed).",
-        "fig": "M2"
+    "F350_LONG": {
+      "label": "2011 F-350 crew cab 4x4 SRW, 8 ft box (DESIGN TRUCK)",
+      "family": "SUPER_DUTY",
+      "tailgate": {
+        "value": "CLOSED",
+        "tag": "PARAMETRIC",
+        "label": "Tailgate state shown"
       },
-      "truck_rear_axle_from_bulkhead": {
-        "value": 48.0,
-        "tag": "VERIFY ON TRUCK",
-        "label": "Rear axle centerline aft of bed front wall (6.75 ft bed)",
-        "measure": "Drop a plumb line from the hub center; measure along the bed side to the inside of the front wall.",
-        "fig": "M2"
+      "camper_cargo_rating_lb": {
+        "low": 1438,
+        "high": 3002,
+        "source": "2011 Ford RV & Trailer Towing Guide (rvsafety.com/images/pdf/FordTG2011.pdf), accessed 2026-10-01: 4x4 SRW crew 172.4 in WB, max cargo with slide-in camper, Camper Pkg 471, by engine"
       },
-      "truck_wheelbase": {
-        "value": 159.8,
-        "tag": "PRELIMINARY",
-        "label": "Wheelbase, crew cab 6.75 ft (reference model only)"
-      }
-    },
-    "LONG": {
-      "label": "F-350 8 ft bed",
       "truck_bed_length": {
         "value": 98.0,
         "tag": "VERIFY ON TRUCK",
-        "label": "Bed length at floor (8 ft bed)",
-        "measure": "Bed floor, inside front wall to tailgate inner face (tailgate closed).",
-        "fig": "M2"
+        "label": "Bed length at floor",
+        "source": "2011 Super Duty 8 ft box 98.0 in (Edmunds/cars.com)",
+        "fig": "M2",
+        "measure": "Bed floor, inside front wall to tailgate inner face (tailgate closed)."
       },
       "truck_rear_axle_from_bulkhead": {
-        "value": 52.0,
+        "value": 51.2,
         "tag": "VERIFY ON TRUCK",
-        "label": "Rear axle centerline aft of bed front wall (8 ft bed)",
-        "measure": "Drop a plumb line from the hub center; measure along the bed side to the inside of the front wall.",
-        "fig": "M2"
+        "label": "Rear axle centerline aft of bed front wall",
+        "source": "Derived: 2011 crew-cab wheelbases 156.2/172.4 in differ by the bed difference (16.2 in), so axle-to-tailgate is the same on both boxes; Ford cab-to-axle 40/56.2 in (quoted from Ford manual on ford-trucks.com forum) less ~5.5 in cab gap + wall.",
+        "fig": "M2",
+        "measure": "Drop a plumb line from the hub center; measure along the bed side to the inside of the front wall."
       },
       "truck_wheelbase": {
-        "value": 176.0,
+        "value": 172.4,
         "tag": "PRELIMINARY",
-        "label": "Wheelbase, crew cab 8 ft (reference model only)"
+        "label": "Wheelbase",
+        "source": "2011 Ford RV & Trailer Towing Guide (rvsafety.com/images/pdf/FordTG2011.pdf), accessed 2026-10-01"
+      }
+    },
+    "F350_SHORT": {
+      "label": "2011 F-350 crew cab 4x4 SRW, 6.75 ft box",
+      "family": "SUPER_DUTY",
+      "tailgate": {
+        "value": "DOWN",
+        "tag": "PARAMETRIC",
+        "label": "Tailgate state shown"
+      },
+      "camper_cargo_rating_lb": {
+        "low": 1650,
+        "high": 2905,
+        "source": "2011 Ford RV & Trailer Towing Guide (rvsafety.com/images/pdf/FordTG2011.pdf), accessed 2026-10-01: 4x4 SRW crew 156.2 in WB, max cargo with slide-in camper, Camper Pkg 471, by engine"
+      },
+      "truck_bed_length": {
+        "value": 81.8,
+        "tag": "VERIFY ON TRUCK",
+        "label": "Bed length at floor",
+        "source": "2011 Super Duty crew 6.75 ft box 81.8 in (Edmunds)",
+        "fig": "M2",
+        "measure": "Bed floor, inside front wall to tailgate inner face (tailgate closed)."
+      },
+      "truck_rear_axle_from_bulkhead": {
+        "value": 35.0,
+        "tag": "VERIFY ON TRUCK",
+        "label": "Rear axle centerline aft of bed front wall",
+        "source": "Derived: 2011 crew-cab wheelbases 156.2/172.4 in differ by the bed difference (16.2 in), so axle-to-tailgate is the same on both boxes; Ford cab-to-axle 40/56.2 in (quoted from Ford manual on ford-trucks.com forum) less ~5.5 in cab gap + wall.",
+        "fig": "M2",
+        "measure": "Drop a plumb line from the hub center; measure along the bed side to the inside of the front wall."
+      },
+      "truck_wheelbase": {
+        "value": 156.2,
+        "tag": "PRELIMINARY",
+        "label": "Wheelbase",
+        "source": "2011 Ford RV & Trailer Towing Guide (rvsafety.com/images/pdf/FordTG2011.pdf), accessed 2026-10-01"
+      }
+    },
+    "F150_65": {
+      "label": "Ford F-150 (2021+) SuperCrew, 6.5 ft box (half-ton representative)",
+      "family": "HALF_TON",
+      "tailgate": {
+        "value": "DOWN",
+        "tag": "PARAMETRIC",
+        "label": "Tailgate state shown"
+      },
+      "camper_cargo_rating_lb": {
+        "low": 1300,
+        "high": 2440,
+        "source": "Typical crew 4x4 ~1,500-1,900; 2026 max advertised 2,440 (theweeklydriver.com, tfltruck.com). Door-jamb sticker governs."
+      },
+      "truck_bed_length": {
+        "value": 78.9,
+        "tag": "PRELIMINARY",
+        "label": "Bed length at floor",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01",
+        "fig": "M2",
+        "measure": "Bed floor, inside front wall to tailgate inner face (tailgate closed)."
+      },
+      "truck_rear_axle_from_bulkhead": {
+        "value": 47.9,
+        "tag": "PRELIMINARY",
+        "label": "Rear axle aft of bed front wall",
+        "source": "ESTIMATE: wheelbase difference equals bed difference, so axle-to-tailgate is constant; absolute value not sourced.",
+        "fig": "M2",
+        "measure": "Drop a plumb line from the hub center; measure along the bed side to the inside of the front wall."
+      },
+      "truck_wheelbase": {
+        "value": 157.2,
+        "tag": "PRELIMINARY",
+        "label": "Wheelbase"
+      },
+      "truck_bed_floor_height": {
+        "value": 35.0,
+        "tag": "PRELIMINARY",
+        "label": "Ground to bed floor",
+        "source": "ESTIMATE: 4x4, no source"
+      },
+      "truck_bed_rail_height": {
+        "value": 21.4,
+        "tag": "PRELIMINARY",
+        "label": "Bed depth",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_bed_floor_width": {
+        "value": 65.2,
+        "tag": "PRELIMINARY",
+        "label": "Inside width",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_bed_inner_width_top": {
+        "value": 65.2,
+        "tag": "PRELIMINARY",
+        "label": "Inside width at top",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_wheel_well_width": {
+        "value": 50.6,
+        "tag": "PRELIMINARY",
+        "label": "Between wheel wells",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_tailgate_opening_width": {
+        "value": 60.0,
+        "tag": "PRELIMINARY",
+        "label": "Tailgate opening",
+        "source": "ESTIMATE (Ram 1500 is 60.0 per armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01)"
+      },
+      "truck_cab_height_above_bed": {
+        "value": 42.0,
+        "tag": "PRELIMINARY",
+        "label": "Cab roof above bed floor",
+        "source": "ESTIMATE: ~77 in overall height minus bed floor"
+      },
+      "truck_tire_diameter": {
+        "value": 32.0,
+        "tag": "PRELIMINARY",
+        "label": "Tire diameter"
+      },
+      "truck_cab_width": {
+        "value": 79.9,
+        "tag": "PRELIMINARY",
+        "label": "Cab width"
+      }
+    },
+    "F150_55": {
+      "label": "Ford F-150 (2021+) SuperCrew, 5.5 ft box (half-ton representative)",
+      "family": "HALF_TON",
+      "tailgate": {
+        "value": "DOWN",
+        "tag": "PARAMETRIC",
+        "label": "Tailgate state shown"
+      },
+      "camper_cargo_rating_lb": {
+        "low": 1300,
+        "high": 2440,
+        "source": "As F150_65"
+      },
+      "truck_bed_length": {
+        "value": 67.1,
+        "tag": "PRELIMINARY",
+        "label": "Bed length at floor",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01",
+        "fig": "M2",
+        "measure": "Bed floor, inside front wall to tailgate inner face (tailgate closed)."
+      },
+      "truck_rear_axle_from_bulkhead": {
+        "value": 36.1,
+        "tag": "PRELIMINARY",
+        "label": "Rear axle aft of bed front wall",
+        "source": "ESTIMATE: wheelbase difference equals bed difference, so axle-to-tailgate is constant; absolute value not sourced.",
+        "fig": "M2",
+        "measure": "Drop a plumb line from the hub center; measure along the bed side to the inside of the front wall."
+      },
+      "truck_wheelbase": {
+        "value": 145.4,
+        "tag": "PRELIMINARY",
+        "label": "Wheelbase"
+      },
+      "truck_bed_floor_height": {
+        "value": 35.0,
+        "tag": "PRELIMINARY",
+        "label": "Ground to bed floor",
+        "source": "ESTIMATE: 4x4, no source"
+      },
+      "truck_bed_rail_height": {
+        "value": 21.4,
+        "tag": "PRELIMINARY",
+        "label": "Bed depth",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_bed_floor_width": {
+        "value": 65.2,
+        "tag": "PRELIMINARY",
+        "label": "Inside width",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_bed_inner_width_top": {
+        "value": 65.2,
+        "tag": "PRELIMINARY",
+        "label": "Inside width at top",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_wheel_well_width": {
+        "value": 50.6,
+        "tag": "PRELIMINARY",
+        "label": "Between wheel wells",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_tailgate_opening_width": {
+        "value": 60.0,
+        "tag": "PRELIMINARY",
+        "label": "Tailgate opening",
+        "source": "ESTIMATE (Ram 1500 is 60.0 per armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01)"
+      },
+      "truck_cab_height_above_bed": {
+        "value": 42.0,
+        "tag": "PRELIMINARY",
+        "label": "Cab roof above bed floor",
+        "source": "ESTIMATE: ~77 in overall height minus bed floor"
+      },
+      "truck_tire_diameter": {
+        "value": 32.0,
+        "tag": "PRELIMINARY",
+        "label": "Tire diameter"
+      },
+      "truck_cab_width": {
+        "value": 79.9,
+        "tag": "PRELIMINARY",
+        "label": "Cab width"
+      }
+    },
+    "TACOMA_6": {
+      "label": "Toyota Tacoma (2016-2023) Double Cab, 6 ft box",
+      "family": "MIDSIZE",
+      "tailgate": {
+        "value": "DOWN",
+        "tag": "PARAMETRIC",
+        "label": "Tailgate state shown"
+      },
+      "camper_cargo_rating_lb": {
+        "low": 1050,
+        "high": 1445,
+        "source": "Tacoma 2016-2023: armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01; payload 1,050-1,445 lb (2021 model, earnhardttoyota/kimboliving summaries)"
+      },
+      "truck_bed_length": {
+        "value": 73.7,
+        "tag": "PRELIMINARY",
+        "label": "Bed length at floor",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01",
+        "fig": "M2",
+        "measure": "Bed floor, inside front wall to tailgate inner face (tailgate closed)."
+      },
+      "truck_rear_axle_from_bulkhead": {
+        "value": 46.2,
+        "tag": "PRELIMINARY",
+        "label": "Rear axle aft of bed front wall",
+        "source": "ESTIMATE: wheelbase difference equals bed difference, so axle-to-tailgate is constant; absolute value not sourced.",
+        "fig": "M2",
+        "measure": "Drop a plumb line from the hub center; measure along the bed side to the inside of the front wall."
+      },
+      "truck_wheelbase": {
+        "value": 140.6,
+        "tag": "PRELIMINARY",
+        "label": "Wheelbase"
+      },
+      "truck_bed_floor_height": {
+        "value": 33.0,
+        "tag": "PRELIMINARY",
+        "label": "Ground to bed floor",
+        "source": "ESTIMATE: 4x4, no source"
+      },
+      "truck_bed_rail_height": {
+        "value": 19.1,
+        "tag": "PRELIMINARY",
+        "label": "Bed depth",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_bed_floor_width": {
+        "value": 56.7,
+        "tag": "PRELIMINARY",
+        "label": "Inside width",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_bed_inner_width_top": {
+        "value": 56.7,
+        "tag": "PRELIMINARY",
+        "label": "Inside width at top",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_bed_rail_width": {
+        "value": 8.8,
+        "tag": "PRELIMINARY",
+        "label": "Rail/side width",
+        "source": "ESTIMATE: 74.4 in overall width less inside width"
+      },
+      "truck_wheel_well_width": {
+        "value": 41.5,
+        "tag": "PRELIMINARY",
+        "label": "Between wheel wells",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_tailgate_opening_width": {
+        "value": 53.0,
+        "tag": "PRELIMINARY",
+        "label": "Tailgate opening",
+        "source": "ESTIMATE: tailgate width ~53 in (search summary, unconfirmed)"
+      },
+      "truck_cab_height_above_bed": {
+        "value": 37.5,
+        "tag": "PRELIMINARY",
+        "label": "Cab roof above bed floor",
+        "source": "ESTIMATE: 70.6 in overall height minus bed floor"
+      },
+      "truck_cab_width": {
+        "value": 74.4,
+        "tag": "PRELIMINARY",
+        "label": "Cab width"
+      },
+      "truck_tire_diameter": {
+        "value": 31.0,
+        "tag": "PRELIMINARY",
+        "label": "Tire diameter"
+      },
+      "truck_track_width": {
+        "value": 63.0,
+        "tag": "PRELIMINARY",
+        "label": "Track width"
+      },
+      "truck_hood_height_above_bed": {
+        "value": 12.0,
+        "tag": "PRELIMINARY",
+        "label": "Hood height"
+      },
+      "truck_beltline_above_bed": {
+        "value": 10.0,
+        "tag": "PRELIMINARY",
+        "label": "Beltline"
+      },
+      "truck_body_bottom_below_bed": {
+        "value": 12.0,
+        "tag": "PRELIMINARY",
+        "label": "Body bottom"
+      }
+    },
+    "TACOMA_5": {
+      "label": "Toyota Tacoma (2016-2023) Double Cab, 5 ft box",
+      "family": "MIDSIZE",
+      "tailgate": {
+        "value": "DOWN",
+        "tag": "PARAMETRIC",
+        "label": "Tailgate state shown"
+      },
+      "camper_cargo_rating_lb": {
+        "low": 1050,
+        "high": 1445,
+        "source": "Tacoma 2016-2023: armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01; payload 1,050-1,445 lb (2021 model, earnhardttoyota/kimboliving summaries)"
+      },
+      "truck_bed_length": {
+        "value": 60.5,
+        "tag": "PRELIMINARY",
+        "label": "Bed length at floor",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01",
+        "fig": "M2",
+        "measure": "Bed floor, inside front wall to tailgate inner face (tailgate closed)."
+      },
+      "truck_rear_axle_from_bulkhead": {
+        "value": 33.0,
+        "tag": "PRELIMINARY",
+        "label": "Rear axle aft of bed front wall",
+        "source": "ESTIMATE: wheelbase difference equals bed difference, so axle-to-tailgate is constant; absolute value not sourced.",
+        "fig": "M2",
+        "measure": "Drop a plumb line from the hub center; measure along the bed side to the inside of the front wall."
+      },
+      "truck_wheelbase": {
+        "value": 127.4,
+        "tag": "PRELIMINARY",
+        "label": "Wheelbase"
+      },
+      "truck_bed_floor_height": {
+        "value": 33.0,
+        "tag": "PRELIMINARY",
+        "label": "Ground to bed floor",
+        "source": "ESTIMATE: 4x4, no source"
+      },
+      "truck_bed_rail_height": {
+        "value": 19.1,
+        "tag": "PRELIMINARY",
+        "label": "Bed depth",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_bed_floor_width": {
+        "value": 56.7,
+        "tag": "PRELIMINARY",
+        "label": "Inside width",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_bed_inner_width_top": {
+        "value": 56.7,
+        "tag": "PRELIMINARY",
+        "label": "Inside width at top",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_bed_rail_width": {
+        "value": 8.8,
+        "tag": "PRELIMINARY",
+        "label": "Rail/side width",
+        "source": "ESTIMATE: 74.4 in overall width less inside width"
+      },
+      "truck_wheel_well_width": {
+        "value": 41.5,
+        "tag": "PRELIMINARY",
+        "label": "Between wheel wells",
+        "source": "armorthane.com truck bed dimension chart (from maker spec sheets), accessed 2026-10-01"
+      },
+      "truck_tailgate_opening_width": {
+        "value": 53.0,
+        "tag": "PRELIMINARY",
+        "label": "Tailgate opening",
+        "source": "ESTIMATE: tailgate width ~53 in (search summary, unconfirmed)"
+      },
+      "truck_cab_height_above_bed": {
+        "value": 37.5,
+        "tag": "PRELIMINARY",
+        "label": "Cab roof above bed floor",
+        "source": "ESTIMATE: 70.6 in overall height minus bed floor"
+      },
+      "truck_cab_width": {
+        "value": 74.4,
+        "tag": "PRELIMINARY",
+        "label": "Cab width"
+      },
+      "truck_tire_diameter": {
+        "value": 31.0,
+        "tag": "PRELIMINARY",
+        "label": "Tire diameter"
+      },
+      "truck_track_width": {
+        "value": 63.0,
+        "tag": "PRELIMINARY",
+        "label": "Track width"
+      },
+      "truck_hood_height_above_bed": {
+        "value": 12.0,
+        "tag": "PRELIMINARY",
+        "label": "Hood height"
+      },
+      "truck_beltline_above_bed": {
+        "value": 10.0,
+        "tag": "PRELIMINARY",
+        "label": "Beltline"
+      },
+      "truck_body_bottom_below_bed": {
+        "value": 12.0,
+        "tag": "PRELIMINARY",
+        "label": "Body bottom"
       }
     }
   },

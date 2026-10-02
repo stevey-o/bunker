@@ -2,8 +2,8 @@
 // scripts_code/common.py:utility_rails() and synced as UTIL_RAILS.
 // v0.1: placeholders on the interior wall faces. Attachment into frame members is a v0.2 task.
 
-module utility_rails() {
-    for (r = UTIL_RAILS) {
+module utility_rails(which = "ALL") {
+    for (r = UTIL_RAILS) if (which == "ALL" || r[0][5] == which) {
         id = r[0]; len = r[1]; p = r[2];
         h = profile_h(util_profile) / 2;
         // offset the rail so its back face sits on the interior wall surface

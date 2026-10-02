@@ -5,27 +5,27 @@
 
 | Item | Low ($) | High ($) | Basis |
 |---|---:|---:|---|
-| 5052 skin sheet (9-10 sheets 4x8) | 1,170 | 2,300 | area x waste / 32 ft2 |
-| 6061 tube | 888 | 1,985 | tube mass 296-397 lb |
-| T-slot utility rails | 248 | 496 | 496 in total |
+| 5052 skin sheet (11 sheets 4x8) | 1,430 | 2,530 | area x waste / 32 ft2 |
+| 6061 tube | 1,047 | 2,337 | tube mass 349-467 lb |
+| T-slot utility rails | 305 | 610 | 610 in total |
 | Rear door | 400 | 900 | purchased |
 | Windows (3) | 300 | 600 | purchased |
 | Roof-rack bosses (6) | 48 | 120 | provision |
-| Insulation | 140 | 229 | 255 ft2 |
-| Interior panel | 183 | 370 | 255 ft2 |
+| Insulation | 161 | 264 | 293 ft2 |
+| Interior panel | 211 | 425 | 293 ft2 |
 | Adhesive + sealant | 150 | 300 | lot |
 | Fasteners + rivets | 200 | 350 | lot |
 | Welding consumables + gas | 150 | 300 | lot |
-| **Shell materials, excl. jacks and tooling** | **3,877** | **7,950** | |
+| **Shell materials, excl. jacks and tooling** | **4,402** | **8,735** | |
 | Jacks (4), tracked separately | 900 | 1,600 | |
 | One-time tooling (`tooling_costs.csv`) | 1,510 | 3,250 | not shell cost |
 
 ## Against the target
 
-Owner target: $4,000-$6,000 ("high-end truck topper"). Estimate: **$3,877-$7,950** excluding jacks and tooling.
+Owner target: $4,000-$6,000 ("high-end truck topper"). Estimate: **$4,402-$8,735** excluding jacks and tooling.
 
-The low half of the range fits the target; the high half does not. The largest line is **5052 skin sheet (9-10 sheets 4x8)** (up to $2,300). 6061 tube is priced at a realistic retail $/lb, which is above the handoff's first-pass $500-900 tube figure; get local quotes before trusting either number.
+The low half of the range fits the target; the high half does not. The largest line is **5052 skin sheet (11 sheets 4x8)** (up to $2,530). 6061 tube is priced at a realistic retail $/lb, which is above the handoff's first-pass $500-900 tube figure; get local quotes before trusting either number.
 
 ## Sensitivity: interior height
 
-Each +1 in of interior_height adds **$9-20** (and 5.2-6.3 lb).
+Each +1 in of interior_height adds **$26-50** (and 5.8-7.0 lb).

@@ -15,7 +15,7 @@ sync:
 render: sync
 	$(PY) $(S)/render_all.py
 
-drawings: sync
+drawings: render
 	$(PY) $(S)/export_drawings.py
 
 reports: render
@@ -23,6 +23,7 @@ reports: render
 	$(PY) $(S)/generate_cutlist.py
 	$(PY) $(S)/generate_weight_report.py
 	$(PY) $(S)/generate_cost_report.py
+	$(PY) $(S)/generate_fit_study.py
 
 docs: sync
 	$(PY) $(S)/generate_dimension_docs.py

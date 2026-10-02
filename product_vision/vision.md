@@ -12,4 +12,4 @@ T-slot rails, a reinforced floor zone, a wire chase, and roof-rack hard points. 
 evolve the camper over years instead of making every decision on day one.
 
 Commercial empty shells cost $17,000-21,000 (`competitors/modular_shells.md`). MINUTEMAN's material
-estimate is $3,900-7,950 plus the owner's labor, built with tools a determined novice can learn.
+estimate is $4,400-8,700 plus the owner's labor, built with tools a determined novice can learn.

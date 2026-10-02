@@ -23,7 +23,7 @@ def val(v):
 
 
 def dimensions_md(cfg):
-    ps, pl = params(cfg, "SHORT"), params(cfg, "LONG")
+    ps, pl = params(cfg, "F350_LONG"), params(cfg, "F350_SHORT")
     L = ["<!-- " + GENERATED_HEADER.format(script="generate_dimension_docs.py") + " -->",
          "# MINUTEMAN v%s envelope - dimensions" % cfg["version"], "",
          "Every major design dimension, each tagged exactly one of:", "",
@@ -38,7 +38,8 @@ def dimensions_md(cfg):
          "| Interior clear standing height | %s | FIXED |" % fmt_in(ps["interior_height"]),
          "| Overall length (rear face to nose tip) | %s | PARAMETRIC |" % fmt_in(ps["overall_length"]),
          "| Body width | %s | PARAMETRIC |" % fmt_in(ps["camper_body_width"]),
-         "| Ground to roof eave / crown on F-350 | %s / %s | VERIFY ON TRUCK |" % (fmt_in(ps["ground_to_eave"]), fmt_in(ps["ground_to_crown"])),
+         "| Ground to roof eave / crown on 2011 F-350 4x4 | %s / %s | VERIFY ON TRUCK |" % (fmt_in(ps["ground_to_eave"]), fmt_in(ps["ground_to_crown"])),
+         "| Lower length (fills 8 ft bed, tailgate closed) | %s | FIXED |" % fmt_in(ps["camper_lower_length"]),
          "| Nose underside above cab roof | %s | VERIFY ON TRUCK |" % fmt_in(ps["camper_to_cab_clearance"]), ""]
     groups = {}
     for k, v in cfg["camper"].items():
@@ -50,18 +51,25 @@ def dimensions_md(cfg):
               for k, v in items]
         L.append("")
     L += ["## Derived dimensions (computed in `scripts_code/common.py`)", "",
-          "| Name | Description | Short bed | Long bed | Tag |", "|---|---|---|---|---|"]
-    for name, label, tag, _fn in DERIVED:
+          "| Name | Description | 8 ft bed (design) | 6.75 ft bed | Tag |", "|---|---|---|---|---|"]
+    for name, label, tag, _scope, _fn in DERIVED:
         L.append("| `%s` | %s | %g | %g | %s |" % (name, label, ps[name], pl[name], tag))
-    L += ["", "## Truck interface (F-350, preliminary reference values)", "",
+    L += ["", "## Truck interface (2011 F-350 base values)", "",
           "| Parameter | Description | Value | Tag | Sheet fig. |", "|---|---|---|---|---|"]
     for k, v in cfg["truck"].items():
         L.append("| `%s` | %s | %s | %s | %s |" % (k, v["label"], val(v["value"]), v["tag"], v.get("fig", "")))
-    L += ["", "| Parameter | Description | 6.75 ft bed | 8 ft bed | Tag |", "|---|---|---|---|---|"]
-    for k, v in cfg["truck_variants"]["SHORT"].items():
-        if isinstance(v, dict):
-            L.append("| `%s` | %s | %s | %s | %s |" % (k, v["label"].split(" (")[0], val(v["value"]),
-                                                       val(cfg["truck_variants"]["LONG"][k]["value"]), v["tag"]))
+    names = list(cfg["truck_variants"])
+    L += ["", "### All truck variants (fit study only; the camper is sized to %s)" % cfg["build"]["DESIGN_TRUCK"]["value"], "",
+          "| Value | " + " | ".join(names) + " |", "|---|" + "---|" * len(names)]
+    keys = ["truck_bed_length", "truck_rear_axle_from_bulkhead", "truck_wheelbase", "truck_bed_floor_height",
+            "truck_bed_rail_height", "truck_wheel_well_width", "truck_bed_floor_width", "truck_tailgate_opening_width",
+            "truck_cab_height_above_bed"]
+    pv = {n: params(cfg, n) for n in names}
+    for k in keys:
+        L.append("| `%s` | %s |" % (k, " | ".join(val(pv[n][k]) for n in names)))
+    L.append("| camper cargo rating (lb) | %s |" % " | ".join(
+        "%d-%d" % (cfg["truck_variants"][n]["camper_cargo_rating_lb"]["low"], cfg["truck_variants"][n]["camper_cargo_rating_lb"]["high"]) for n in names))
+    L += ["", "Sources and estimate flags for every value: `truck_data/README.md`. Fit verdicts: `truck_data/fit_study.md`."]
     L += ["", "## Unresolved dimensions", "",
           "These cannot be closed until the truck is measured or v0.2 structure exists:", ""]
     unresolved = [(k, v) for sec in ("camper", "truck") for k, v in cfg[sec].items() if v["tag"] == "VERIFY ON TRUCK"]
@@ -101,10 +109,10 @@ def sheet_rows(cfg):
     for k, v in cfg["truck"].items():
         if v["tag"] == "VERIFY ON TRUCK":
             rows.append((v.get("fig", ""), v["label"], v["measure"], val(v["value"]), k))
-    for k, v in cfg["truck_variants"]["SHORT"].items():
-        if isinstance(v, dict) and v["tag"] == "VERIFY ON TRUCK":
-            rows.append((v["fig"], v["label"].split(" (")[0], v["measure"],
-                         "%s (6.75) / %s (8)" % (val(v["value"]), val(cfg["truck_variants"]["LONG"][k]["value"])), k))
+    for k, v in cfg["truck_variants"]["F350_LONG"].items():
+        if isinstance(v, dict) and v.get("tag") == "VERIFY ON TRUCK":
+            rows.append((v["fig"], v["label"], v["measure"],
+                         "%s (8 ft) / %s (6.75)" % (val(v["value"]), val(cfg["truck_variants"]["F350_SHORT"][k]["value"])), k))
     rows.sort(key=lambda r: r[0])
     return rows
 
@@ -241,13 +249,23 @@ def sheet_pdf(cfg, rows):
     y3 = y2 - 20 - 150
     x = 40
     _panel(c, x, y3, pw * 2 + 20, 150, "M5  Tailgate opening (rear view, tailgate open or removed)")
-    cx, fy = x + pw + 10, y3 + 30
-    c.line(cx - 130, fy, cx + 130, fy)
+    cx, fy = x + pw + 75, y3 + 30
+    c.line(cx - 125, fy, cx + 125, fy)
     for s in (-1, 1):
         c.rect(cx + s * 110 - (10 if s < 0 else 0), fy, 10, 85)
     c.setFont("Helvetica", 7)
-    c.drawString(cx + 125, fy + 40, "post / latch striker")
+    c.drawString(cx + 92, fy + 92, "post / latch striker")
     _arrow_dim(c, cx - 100, fy + 50, cx + 100, fy + 50, "narrowest clear width " + n("truck_tailgate_opening_width"))
+    # side inset: lowered tailgate (only matters for short-bed / tailgate-down use)
+    sx, sy = x + 30, fy + 10
+    c.setFont("Helvetica", 7)
+    c.drawString(sx, sy + 78, "side view, tailgate down:")
+    c.line(sx, sy + 40, sx + 60, sy + 40)
+    c.drawString(sx, sy + 30, "bed floor")
+    c.rect(sx + 60, sy + 42, 70, 4)
+    _arrow_dim(c, sx + 60, sy + 58, sx + 130, sy + 58, "length " + n("truck_tailgate_length"))
+    c.setFont("Helvetica-Bold", 7)
+    c.drawString(sx + 62, sy + 25, "step vs floor " + n("truck_tailgate_down_offset"))
     c.showPage()
 
     # page 2: the table

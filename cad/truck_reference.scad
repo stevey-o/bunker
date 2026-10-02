@@ -35,6 +35,17 @@ module truck_wheel_wells() {
     }
 }
 
+// Tailgate: hinge on the bed-floor line at the bed end. "DOWN" projects rearward; the camper must not bear on it.
+module truck_tailgate() {
+    t = 1.8;
+    if (TAILGATE == "CLOSED")
+        translate([tailgate_x - t, -truck_tailgate_opening_width / 2, body_bot_z])
+            cube([t, truck_tailgate_opening_width, truck_bed_rail_height - body_bot_z]);
+    else if (TAILGATE == "DOWN")
+        translate([tailgate_x - truck_tailgate_length, -truck_tailgate_opening_width / 2, truck_tailgate_down_offset - t])
+            cube([truck_tailgate_length, truck_tailgate_opening_width, t]);
+}
+
 module truck_cab() {
     w = truck_cab_width;
     // lower body: cab + front clip
@@ -56,7 +67,7 @@ module truck_wheels() {
 }
 
 module truck_reference() {
-    color(COLOR_TRUCK) { truck_bed(); truck_cab(); }
+    color(COLOR_TRUCK) { truck_bed(); truck_cab(); truck_tailgate(); }
     color([0.15, 0.15, 0.15, 0.55]) truck_wheels();
 }
 

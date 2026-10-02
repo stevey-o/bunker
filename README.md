@@ -16,14 +16,17 @@ CAD appearance is not engineering validation.
 | Truck measurement sheet | [`truck_data/measurement_templates/f350_measurement_sheet.md`](truck_data/measurement_templates/f350_measurement_sheet.md) |
 | Assumptions & statuses | [`engineering/assumptions.md`](engineering/assumptions.md) |
 | Renderings | [`3D_renderings/`](3D_renderings/) |
-| Drawings | [`drawings/`](drawings/) |
+| Drawings (ANSI C, ASME Y14 style, MM-A01..A05) | [`drawings/`](drawings/) · [standards used](reference/drafting_standards.md) |
+| Truck data and sources | [`truck_data/README.md`](truck_data/README.md) |
 
 ## Headline numbers (v0.1, estimates)
 
-- Interior standing height **80"** (6'7"+), ground-to-roof **~10'0"** on an F-350 — tall, not low-profile.
-- Dry weight estimate **854–1,071 lb excluding jacks** vs. an 850–950 lb target. Jacks add 100–140 lb.
-- Shell material cost estimate **$3,877–7,950 excluding jacks and tooling** vs. a $4–6k target. Jacks add $900–1,600.
-- Each +1" of interior height costs ~5–6 lb and ~$9–20.
+- **97" long** lower body (fills a 2011 F-350 8 ft bed with the tailgate closed, ADR 0004); 121" overall with the nose.
+- Interior standing height **80"** (6'7"+), ground-to-roof **~10'7"** on a 2011 F-350 4x4 — tall, not low-profile.
+- Dry weight estimate **985–1,231 lb excluding jacks**, over the 850–950 lb target. Jacks add 100–140 lb.
+- Shell material cost estimate **$4,402–8,735 excluding jacks and tooling** vs. a $4–6k target. Jacks add $900–1,600.
+- **Truck fit** ([fit study](truck_data/fit_study.md)): 8 ft F-350 OK (check payload sticker); 6.75 ft F-350 with tailgate down, F-150 5.5 ft and every Tacoma **fail** (CG behind axle, geometry, or payload).
+- Each +1" of interior height costs ~6–7 lb and ~$26–50.
 
 Full reports: [`bom/weight_report.md`](bom/weight_report.md), [`bom/cost_report.md`](bom/cost_report.md).
 

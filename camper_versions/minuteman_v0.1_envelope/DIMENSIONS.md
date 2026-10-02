@@ -15,9 +15,10 @@ Units: inches. Origin: bed-floor top, truck centerline, inner face of bed front 
 | | Value | Tag |
 |---|---|---|
 | Interior clear standing height | 80.00 (6'-8") | FIXED |
-| Overall length (rear face to nose tip) | 102.00 (8'-6") | PARAMETRIC |
+| Overall length (rear face to nose tip) | 121.00 (10'-1") | PARAMETRIC |
 | Body width | 80.00 (6'-8") | PARAMETRIC |
-| Ground to roof eave / crown on F-350 | 120.50 (10'-0.5") / 121.25 (10'-1.25") | VERIFY ON TRUCK |
+| Ground to roof eave / crown on 2011 F-350 4x4 | 126.00 (10'-6") / 126.75 (10'-6.75") | VERIFY ON TRUCK |
+| Lower length (fills 8 ft bed, tailgate closed) | 97.00 (8'-1") | FIXED |
 | Nose underside above cab roof | 4.00 (0'-4") | VERIFY ON TRUCK |
 
 ## Design parameters
@@ -26,9 +27,9 @@ Units: inches. Origin: bed-floor top, truck centerline, inner face of bed front 
 
 | Parameter | Description | Value | Tag | Note |
 |---|---|---|---|---|
-| `camper_lower_length` | Lower tub / main body length | 78 | PARAMETRIC | Must fit the shortest supported bed (6.75 ft). |
+| `camper_lower_length` | Lower tub / main body length | 97 | FIXED | Owner requirement (ADR 0004): fills the 8 ft bed with the tailgate closed. 98.0 bed - 0.5 front gap - 0.5 tailgate clearance. |
 | `camper_body_width` | Main body width (above bed rails) | 80 | PARAMETRIC | Legal width limit is 102 in; 80 matches cab width for low drag. |
-| `camper_lower_tub_width` | Lower tub width (upper step, between rails) | 63 | VERIFY ON TRUCK | Must pass through the tailgate opening and fit between bed sides with clearance. |
+| `camper_lower_tub_width` | Lower tub width (upper step, between rails) | 59.5 | VERIFY ON TRUCK | Must pass the 2011 F-350 tailgate opening (~61 in) with clearance; 63 in would not. |
 | `interior_height` | Interior clear standing height | 80 | FIXED | Owner requirement: 6'7" (79 in) person standing. Parametric for sensitivity (ADR 0002). |
 | `roof_crown` | Roof transverse drainage crown at centerline | 0.75 | PRELIMINARY | Positive drainage; no ponding. |
 | `nose_projection` | Nose (cab-over) projection forward of front wall | 24 | PARAMETRIC | Storage/desk volume only. Not a sleeping platform for two adults. |
@@ -42,6 +43,7 @@ Units: inches. Origin: bed-floor top, truck centerline, inner face of bed front 
 | `body_rail_clearance` | Body underside above bed rail top | 1 | PRELIMINARY | Space for rail caps / rubber spacers. |
 | `camper_front_gap` | Camper front wall to bed front wall gap | 0.5 | PRELIMINARY |  |
 | `camper_to_cab_clearance` | Nose underside above cab roof | 4 | VERIFY ON TRUCK | Measure over clearance lights / antenna; allow for suspension and cab-bed relative motion. |
+| `tailgate_clearance` | Camper rear face to closed tailgate (design truck) | 0.5 | PRELIMINARY |  |
 
 ### Construction
 
@@ -108,88 +110,116 @@ Units: inches. Origin: bed-floor top, truck centerline, inner face of bed front 
 |---|---|---|---|---|
 | `human_height` | Human reference figure height (6'7") | 79 | FIXED |  |
 
+### Payload
+
+| Parameter | Description | Value | Tag | Note |
+|---|---|---|---|---|
+| `owner_gear_allowance_lb` | Owner gear allowance for payload / CG checks (lb) | 300 | PRELIMINARY | Water, food, tools, bedding. Placed at floor center for CG. Not part of dry weight. |
+
 ## Derived dimensions (computed in `scripts_code/common.py`)
 
-| Name | Description | Short bed | Long bed | Tag |
+| Name | Description | 8 ft bed (design) | 6.75 ft bed | Tag |
 |---|---|---|---|---|
-| `tub_base_width` | Lower tub base width (between wheel wells) | 49.1 | 49.1 | VERIFY ON TRUCK |
+| `tub_base_width` | Lower tub base width (between wheel wells) | 49.4 | 49.4 | VERIFY ON TRUCK |
 | `tub_step_z` | Lower tub step height above bed floor (clears wheel wells) | 11.5 | 11.5 | VERIFY ON TRUCK |
-| `camper_lower_tub_height` | Lower tub height / body underside above bed floor | 21.4 | 21.4 | VERIFY ON TRUCK |
+| `camper_lower_tub_height` | Lower tub height / body underside above bed floor | 21 | 21 | VERIFY ON TRUCK |
 | `camper_front_x` | Camper front face X | -0.5 | -0.5 | PRELIMINARY |
-| `camper_rear_x` | Camper rear face X | -78.5 | -78.5 | PRELIMINARY |
+| `camper_rear_x` | Camper rear face X | -97.5 | -97.5 | PRELIMINARY |
 | `interior_floor_z` | Interior floor above bed floor | 3 | 3 | PRELIMINARY |
 | `ceiling_z` | Ceiling above bed floor | 83 | 83 | PRELIMINARY |
 | `roof_eave_z` | Roof eave above bed floor | 86.5 | 86.5 | PRELIMINARY |
 | `roof_crown_z` | Roof crown (highest point) above bed floor | 87.25 | 87.25 | PRELIMINARY |
-| `nose_bottom_z` | Nose underside above bed floor | 50 | 50 | VERIFY ON TRUCK |
-| `nose_floor_z` | Nose interior floor above bed floor | 52.5 | 52.5 | VERIFY ON TRUCK |
-| `nose_interior_height` | Nose interior clear height | 30.5 | 30.5 | VERIFY ON TRUCK |
+| `nose_bottom_z` | Nose underside above bed floor | 45.5 | 45.5 | VERIFY ON TRUCK |
+| `nose_floor_z` | Nose interior floor above bed floor | 48 | 48 | VERIFY ON TRUCK |
+| `nose_interior_height` | Nose interior clear height | 35 | 35 | VERIFY ON TRUCK |
 | `nose_front_x` | Nose lower front edge X | 23.5 | 23.5 | PARAMETRIC |
-| `overall_length` | Overall camper length (rear face to nose tip) | 102 | 102 | PARAMETRIC |
+| `overall_length` | Overall camper length (rear face to nose tip) | 121 | 121 | PARAMETRIC |
 | `overall_height` | Overall camper height (tub bottom to crown) | 87.25 | 87.25 | PRELIMINARY |
-| `ground_to_eave` | Ground to roof eave on truck | 120.5 | 120.5 | VERIFY ON TRUCK |
-| `ground_to_crown` | Ground to roof crown on truck (travel height, excl. rack) | 121.25 | 121.25 | VERIFY ON TRUCK |
 | `body_interior_width` | Main body interior width | 76.5 | 76.5 | PRELIMINARY |
-| `tub_interior_base_width` | Interior floor width (tub base) | 45.6 | 45.6 | VERIFY ON TRUCK |
-| `interior_length` | Main body interior length (excl. nose) | 74.5 | 74.5 | PRELIMINARY |
-| `cab_back_x` | Cab back face X | 5.5 | 5.5 | VERIFY ON TRUCK |
-| `nose_over_cab` | Nose overlap forward of cab back | 18 | 18 | VERIFY ON TRUCK |
-| `bed_length_unused` | Bed length behind camper (unused) | 3.4 | 19.5 | VERIFY ON TRUCK |
-| `rear_axle_x` | Rear axle X | -48 | -52 | VERIFY ON TRUCK |
-| `floor_mid_ahead_of_axle` | Camper floor midpoint ahead of rear axle | 8.5 | 12.5 | VERIFY ON TRUCK |
+| `tub_interior_base_width` | Interior floor width (tub base) | 45.9 | 45.9 | VERIFY ON TRUCK |
+| `interior_length` | Main body interior length (excl. nose) | 93.5 | 93.5 | PRELIMINARY |
 | `door_bottom_z` | Door sill above bed floor | 4 | 4 | PRELIMINARY |
 | `door_top_z` | Door head above bed floor | 76 | 76 | PRELIMINARY |
 | `window_side_center_z` | Side window center above bed floor | 53 | 53 | PARAMETRIC |
 | `headroom_6ft7` | Headroom over a 6'7" person | 1 | 1 | FIXED |
+| `ground_to_eave` | Ground to roof eave on truck | 126 | 126 | VERIFY ON TRUCK |
+| `ground_to_crown` | Ground to roof crown on truck (travel height, excl. rack) | 126.75 | 126.75 | VERIFY ON TRUCK |
+| `cab_back_x` | Cab back face X | 5.5 | 5.5 | VERIFY ON TRUCK |
+| `nose_over_cab` | Nose overlap forward of cab back | 18 | 18 | VERIFY ON TRUCK |
+| `tailgate_x` | Bed end (closed tailgate inner face) X | -98 | -81.8 | VERIFY ON TRUCK |
+| `rear_overhang` | Camper rear face past bed end (+ = overhangs, - = bed left over) | -0.5 | 15.7 | VERIFY ON TRUCK |
+| `rear_axle_x` | Rear axle X | -51.2 | -35 | VERIFY ON TRUCK |
+| `floor_mid_ahead_of_axle` | Camper floor midpoint ahead of rear axle | 2.2 | -14 | VERIFY ON TRUCK |
+| `cab_clearance` | Nose underside above this truck's cab roof | 4 | 4 | VERIFY ON TRUCK |
+| `rail_clearance` | Body underside above this truck's bed rails | 1 | 1 | VERIFY ON TRUCK |
+| `wheel_well_side_clearance` | Tub base to wheel well, each side | 0.75 | 0.75 | VERIFY ON TRUCK |
+| `wheel_well_top_clearance` | Tub step above wheel-well top | 1 | 1 | VERIFY ON TRUCK |
+| `tailgate_side_clearance` | Tub to tailgate opening, each side | 0.75 | 0.75 | VERIFY ON TRUCK |
+| `bed_side_clearance` | Tub to bed side walls, each side | 3.25 | 3.25 | VERIFY ON TRUCK |
 
-## Truck interface (F-350, preliminary reference values)
+## Truck interface (2011 F-350 base values)
 
 | Parameter | Description | Value | Tag | Sheet fig. |
 |---|---|---|---|---|
-| `truck_bed_floor_height` | Ground to bed floor | 34 | VERIFY ON TRUCK | M1 |
-| `truck_bed_rail_height` | Bed floor to top of bed rail (bed depth) | 20.4 | VERIFY ON TRUCK | M2 |
-| `truck_bed_floor_width` | Inside bed width at floor (outside the wheel wells) | 69.3 | VERIFY ON TRUCK | M3 |
-| `truck_bed_inner_width_top` | Inside bed width at top of rails | 69.3 | VERIFY ON TRUCK | M3 |
-| `truck_bed_rail_width` | Bed rail top width (each side) | 5.3 | VERIFY ON TRUCK | M3 |
-| `truck_tailgate_opening_width` | Tailgate opening width (narrowest point) | 65 | VERIFY ON TRUCK | M5 |
-| `truck_wheel_well_width` | Clear width between wheel wells | 50.6 | VERIFY ON TRUCK | M3 |
+| `truck_bed_floor_height` | Ground to bed floor | 39.5 | VERIFY ON TRUCK | M1 |
+| `truck_bed_rail_height` | Bed floor to top of bed rail (bed depth) | 20 | VERIFY ON TRUCK | M2 |
+| `truck_bed_floor_width` | Inside bed width at floor (outside the wheel wells) | 66 | VERIFY ON TRUCK | M3 |
+| `truck_bed_inner_width_top` | Inside bed width at top of rails | 66 | VERIFY ON TRUCK | M3 |
+| `truck_bed_rail_width` | Bed rail top width (each side) | 6.5 | VERIFY ON TRUCK | M3 |
+| `truck_tailgate_opening_width` | Tailgate opening width (narrowest point) | 61 | VERIFY ON TRUCK | M5 |
+| `truck_tailgate_length` | Tailgate length, hinge to top edge (projects rearward when down) | 20 | VERIFY ON TRUCK | M5 |
+| `truck_tailgate_down_offset` | Lowered tailgate top surface above bed floor | 0.5 | VERIFY ON TRUCK | M5 |
+| `truck_wheel_well_width` | Clear width between wheel wells | 50.9 | VERIFY ON TRUCK | M3 |
 | `truck_wheel_well_height` | Wheel well height above bed floor | 10.5 | VERIFY ON TRUCK | M2 |
 | `truck_wheel_well_length` | Wheel well length along bed | 34 | VERIFY ON TRUCK | M2 |
-| `truck_cab_height_above_bed` | Bed floor to highest point of cab roof | 46 | VERIFY ON TRUCK | M4 |
+| `truck_cab_height_above_bed` | Bed floor to highest point of cab roof | 41.5 | VERIFY ON TRUCK | M4 |
 | `truck_cab_to_bed_clearance` | Gap: bed front wall outer face to cab back | 4 | VERIFY ON TRUCK | M4 |
 | `truck_bed_front_wall_thickness` | Bed front wall thickness at the rail | 1.5 | VERIFY ON TRUCK | M4 |
-| `truck_cab_width` | Cab width (reference model only) | 79 | PRELIMINARY |  |
+| `truck_cab_width` | Cab width (reference model only) | 79.9 | PRELIMINARY |  |
 | `truck_cab_roof_length` | Cab roof length (reference model only) | 58 | PRELIMINARY |  |
-| `truck_hood_height_above_bed` | Hood height above bed floor (reference model only) | 23 | PRELIMINARY |  |
-| `truck_tire_diameter` | Tire diameter (reference model only) | 35 | PRELIMINARY |  |
+| `truck_hood_height_above_bed` | Hood height above bed floor (reference model only) | 18 | PRELIMINARY |  |
+| `truck_tire_diameter` | Tire diameter (reference model only) | 33 | PRELIMINARY |  |
 | `truck_track_width` | Rear track width (reference model only) | 68 | PRELIMINARY |  |
-| `truck_windshield_run` | Windshield horizontal run, roof front to hood (reference model only) | 24 | PRELIMINARY |  |
+| `truck_windshield_run` | Windshield horizontal run (reference model only) | 24 | PRELIMINARY |  |
 | `truck_front_overhang` | Front axle to front bumper (reference model only) | 38 | PRELIMINARY |  |
 | `truck_body_bottom_below_bed` | Bed/cab body bottom below bed floor (reference model only) | 14 | PRELIMINARY |  |
-| `truck_beltline_above_bed` | Cab beltline above bed floor (reference model only) | 18 | PRELIMINARY |  |
+| `truck_beltline_above_bed` | Cab beltline above bed floor (reference model only) | 14 | PRELIMINARY |  |
 
-| Parameter | Description | 6.75 ft bed | 8 ft bed | Tag |
-|---|---|---|---|---|
-| `truck_bed_length` | Bed length at floor | 81.9 | 98 | VERIFY ON TRUCK |
-| `truck_rear_axle_from_bulkhead` | Rear axle centerline aft of bed front wall | 48 | 52 | VERIFY ON TRUCK |
-| `truck_wheelbase` | Wheelbase, crew cab 6.75 ft | 159.8 | 176 | PRELIMINARY |
+### All truck variants (fit study only; the camper is sized to F350_LONG)
+
+| Value | F350_LONG | F350_SHORT | F150_65 | F150_55 | TACOMA_6 | TACOMA_5 |
+|---|---|---|---|---|---|---|
+| `truck_bed_length` | 98 | 81.8 | 78.9 | 67.1 | 73.7 | 60.5 |
+| `truck_rear_axle_from_bulkhead` | 51.2 | 35 | 47.9 | 36.1 | 46.2 | 33 |
+| `truck_wheelbase` | 172.4 | 156.2 | 157.2 | 145.4 | 140.6 | 127.4 |
+| `truck_bed_floor_height` | 39.5 | 39.5 | 35 | 35 | 33 | 33 |
+| `truck_bed_rail_height` | 20 | 20 | 21.4 | 21.4 | 19.1 | 19.1 |
+| `truck_wheel_well_width` | 50.9 | 50.9 | 50.6 | 50.6 | 41.5 | 41.5 |
+| `truck_bed_floor_width` | 66 | 66 | 65.2 | 65.2 | 56.7 | 56.7 |
+| `truck_tailgate_opening_width` | 61 | 61 | 60 | 60 | 53 | 53 |
+| `truck_cab_height_above_bed` | 41.5 | 41.5 | 42 | 42 | 37.5 | 37.5 |
+| camper cargo rating (lb) | 1438-3002 | 1650-2905 | 1300-2440 | 1300-2440 | 1050-1445 | 1050-1445 |
+
+Sources and estimate flags for every value: `truck_data/README.md`. Fit verdicts: `truck_data/fit_study.md`.
 
 ## Unresolved dimensions
 
 These cannot be closed until the truck is measured or v0.2 structure exists:
 
-- `camper_lower_tub_width`: Lower tub width (upper step, between rails) (now 63)
+- `camper_lower_tub_width`: Lower tub width (upper step, between rails) (now 59.5)
 - `camper_to_cab_clearance`: Nose underside above cab roof (now 4)
-- `truck_bed_floor_height`: Ground to bed floor (now 34)
-- `truck_bed_rail_height`: Bed floor to top of bed rail (bed depth) (now 20.4)
-- `truck_bed_floor_width`: Inside bed width at floor (outside the wheel wells) (now 69.3)
-- `truck_bed_inner_width_top`: Inside bed width at top of rails (now 69.3)
-- `truck_bed_rail_width`: Bed rail top width (each side) (now 5.3)
-- `truck_tailgate_opening_width`: Tailgate opening width (narrowest point) (now 65)
-- `truck_wheel_well_width`: Clear width between wheel wells (now 50.6)
+- `truck_bed_floor_height`: Ground to bed floor (now 39.5)
+- `truck_bed_rail_height`: Bed floor to top of bed rail (bed depth) (now 20)
+- `truck_bed_floor_width`: Inside bed width at floor (outside the wheel wells) (now 66)
+- `truck_bed_inner_width_top`: Inside bed width at top of rails (now 66)
+- `truck_bed_rail_width`: Bed rail top width (each side) (now 6.5)
+- `truck_tailgate_opening_width`: Tailgate opening width (narrowest point) (now 61)
+- `truck_tailgate_length`: Tailgate length, hinge to top edge (projects rearward when down) (now 20)
+- `truck_tailgate_down_offset`: Lowered tailgate top surface above bed floor (now 0.5)
+- `truck_wheel_well_width`: Clear width between wheel wells (now 50.9)
 - `truck_wheel_well_height`: Wheel well height above bed floor (now 10.5)
 - `truck_wheel_well_length`: Wheel well length along bed (now 34)
-- `truck_cab_height_above_bed`: Bed floor to highest point of cab roof (now 46)
+- `truck_cab_height_above_bed`: Bed floor to highest point of cab roof (now 41.5)
 - `truck_cab_to_bed_clearance`: Gap: bed front wall outer face to cab back (now 4)
 - `truck_bed_front_wall_thickness`: Bed front wall thickness at the rail (now 1.5)
 - `truck_bed_length`, `truck_rear_axle_from_bulkhead`: which bed does the owner's truck have?

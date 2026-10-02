@@ -56,8 +56,14 @@ module proj_part() {
     else if (PART == "win_nose") nose_window();
     else if (PART == "bosses") roof_rack_bosses();
     else if (PART == "rails") utility_rails();
+    else if (PART == "rails_L") utility_rails("L");
+    else if (PART == "rails_R") utility_rails("R");
+    else if (PART == "rails_F") utility_rails("F");
+    else if (PART == "power_zone") power_zone();
+    else if (PART == "wire_chase") wire_chase();
     else if (PART == "truck_bed") truck_bed();
     else if (PART == "truck_cab") truck_cab();
+    else if (PART == "truck_tailgate") truck_tailgate();
     else if (PART == "truck_wheels") truck_wheels();
     else if (PART == "human_inside") translate([camper_rear_x + camper_lower_length * 0.45, -4, interior_floor_z]) human();
     else if (PART == "human_ground") translate([camper_rear_x - 30, camper_body_width / 2 + 18, -truck_bed_floor_height]) human();
@@ -77,5 +83,8 @@ else if (VIEW == "proj") {
     if (PLANE == "xsection")   // section looking forward at x = CUT_X: 2D coords (y, z)
         projection(cut = true) multmatrix([[0, 1, 0, 0], [0, 0, 1, 0], [1, 0, 0, 0], [0, 0, 0, 1]])
             translate([-CUT_X, 0, 0]) proj_part();
+    else if (PLANE == "ysection")   // section at y = CUT_Y, 2D coords (x, z)
+        projection(cut = true) multmatrix([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])
+            translate([0, -CUT_Y, 0]) proj_part();
     else projection() plane_map() proj_part();
 }
